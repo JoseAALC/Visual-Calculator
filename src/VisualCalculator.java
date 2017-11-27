@@ -230,38 +230,3 @@ class VisualCalculator extends Frame implements ActionListener {
 	private int getBlue(int color) { return color & 0xff; }
 	private int makeColor(int red, int green, int blue) { return (255 << 24) | (red << 16) | (green << 8) | blue; }
 }
-
-//---------------------------------------------------------------
-// Classe Frame de apoio para visualização de uma imagem
-//--------------------------------------------------------------- 
-class ImagePanel extends Frame
-{
-	private static final long serialVersionUID = 1L;
-	private Image image; 
-
-	// Construtor
-	public ImagePanel(Image newImage)
-	{
-		image = newImage;
-
-		// Handle close window button
-		addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				System.exit(0);
-			}
-		});
-	}
-
-	// Carregar nova imagem no ImagePanel
-	public void newImage(Image im)
-	{
-		image = im;
-		repaint();
-	}
-
-	// Desenhar imagem 
-	public void paint(Graphics g) {
-		g.drawImage(image, 0, 0, null);
-		super.paint(g);
-	}
-}
