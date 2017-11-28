@@ -66,7 +66,11 @@ public class Processor {
 		return original;
 		
 	}
-	
+	/**
+	 * 
+	 * @param binaryImage
+	 * @return a list of Blobs finded on the floodFill method
+	 */
 	public ArrayList<Blob> floodFill(int binaryImage[][]) {
 		int componentCount=0;
 		int componentMarker=2;

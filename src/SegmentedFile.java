@@ -1,12 +1,12 @@
-import java.awt.Image;
+
 public class SegmentedFile {
 	private int binaryMatrix[][];
-	private Image representation;
+	private int[] representationToConvertToImage;
 	
-	public SegmentedFile(int[][] binaryMatrix, Image representation) {
+	public SegmentedFile(int[][] binaryMatrix, int[] representation) {
 		super();
 		this.binaryMatrix = binaryMatrix;
-		this.representation = representation;
+		this.representationToConvertToImage = representation;
 	}
 
 	public int[][] getBinaryMatrix() {
@@ -17,12 +17,12 @@ public class SegmentedFile {
 		this.binaryMatrix = binaryMatrix;
 	}
 
-	public Image getRepresentation() {
-		return representation;
+	public int[] getRepresentation() {
+		return representationToConvertToImage;
 	}
 
-	public void setRepresentation(Image representation) {
-		this.representation = representation;
+	public void setRepresentation(int[] representation) {
+		this.representationToConvertToImage = representation;
 	}
 	
 

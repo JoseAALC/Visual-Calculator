@@ -14,14 +14,43 @@ public class Blob {
 	 * corner points of the object
 	 */
 	private int p1x, p1y, p2x,p2y;
+	/*
+	 * number of the Blob
+	 */
+	private int ID;
+	/*
+	 * Number of pixels
+	 */
+	private int size;
+	
 
-	public Blob(int content[][], int p1x, int p1y, int p2x, int p2y){
-		this.content= content;
-		this.p1x=p1x;
-		this.p1y=p1y;
-		this.p2x=p2x;
-		this.p2y=p2y;
+	public int getID() {
+		return ID;
 	}
+
+	public void setID(int iD) {
+		ID = iD;
+	}
+
+	public int getSize() {
+		return size;
+	}
+
+	public void setSize(int size) {
+		this.size = size;
+	}
+
+	public Blob(int[][] content, int p1x, int p1y, int p2x, int p2y, int iD, int size) {
+		super();
+		this.content = content;
+		this.p1x = p1x;
+		this.p1y = p1y;
+		this.p2x = p2x;
+		this.p2y = p2y;
+		ID = iD;
+		this.size = size;
+	}
+
 	public int[][] getContent() {
 		return content;
 	}
