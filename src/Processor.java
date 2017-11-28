@@ -1,7 +1,4 @@
 import java.awt.Image;
-import java.awt.*;
-import java.awt.image.ImageProducer;
-import java.awt.image.MemoryImageSource;
 import java.awt.image.PixelGrabber;
 import java.util.ArrayList;
 
@@ -53,7 +50,8 @@ public class Processor {
 		}
 		
 		
-		return new SegmentedFile(binaryMatrix,createImage((new MemoryImageSource(sizex, sizey, matrix, 0, sizex))));
+		
+		return new SegmentedFile(binaryMatrix,matrix);
 	
 		
 	}
