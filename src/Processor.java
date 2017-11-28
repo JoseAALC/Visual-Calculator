@@ -1,4 +1,7 @@
 import java.awt.Image;
+import java.awt.*;
+import java.awt.image.ImageProducer;
+import java.awt.image.MemoryImageSource;
 import java.awt.image.PixelGrabber;
 import java.util.ArrayList;
 
@@ -8,7 +11,7 @@ public class Processor {
 	
 	
 	
-	public int[][] Segment(Image original) {
+	public SegmentedFile Segment(Image original) {
 		//get Image Atributes
 		int sizex = original.getWidth(null);
 		int sizey = original.getHeight(null);
@@ -50,15 +53,12 @@ public class Processor {
 		}
 		
 		
-		return binaryMatrix;
+		return new SegmentedFile(binaryMatrix,createImage((new MemoryImageSource(sizex, sizey, matrix, 0, sizex))));
 	
 		
 	}
 	
-	private int getRed(int color) { return (color >> 16) & 0xff; }
-	private int getGreen(int color) { return (color >> 8) & 0xff; }
-	private int getBlue(int color) { return color & 0xff; }
-	private int makeColor(int red, int green, int blue) { return (255 << 24) | (red << 16) | (green << 8) | blue; }
+	
 	
 	public ArrayList<Blob> floodFill(int binaryImage[][]) {
 		int componentCount=0;
@@ -79,6 +79,8 @@ public class Processor {
 		return null;
 		
 	}
+	
+	
 	
 	/**
 	 * DFS responsible by the floodFill of each component
@@ -109,4 +111,9 @@ public class Processor {
 	}
 	
 	
+	
+	private int getRed(int color) { return (color >> 16) & 0xff; }
+	private int getGreen(int color) { return (color >> 8) & 0xff; }
+	private int getBlue(int color) { return color & 0xff; }
+	private int makeColor(int red, int green, int blue) { return (255 << 24) | (red << 16) | (green << 8) | blue; }
 }
