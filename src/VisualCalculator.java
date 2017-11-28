@@ -3,29 +3,27 @@ import java.awt.event.*;
 import java.awt.image.*;
 import javax.imageio.*;
 
-import com.sun.java_cup.internal.runtime.Scanner;
-
 import java.io.*;
 
 // ---------------------------------------------------------------
 // Classe que cria uma Frame principal, onde se situam os comandos
-// de manipulação de imagem. Implementa a interface ActionListener
-// para lidar com os eventos produzidos pelos botões.
+// de manipulaï¿½ï¿½o de imagem. Implementa a interface ActionListener
+// para lidar com os eventos produzidos pelos botï¿½es.
 // ---------------------------------------------------------------
 class VisualCalculator extends Frame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 
-	// Variáveis globais de apoio
-	// Atenção: E se eu quiser ter múltiplas imagens?
+	// Variï¿½veis globais de apoio
+	// Atenï¿½ï¿½o: E se eu quiser ter mï¿½ltiplas imagens?
 	// Isto deve estar na classe ImageFrame!
 	private Image image;
 	private int sizex;
 	private int sizey;;
 	private int matrix[];
 	private int binaryMatrix[][];
-	ImagePanel imagePanel; // E se eu quiser múltiplas janelas?
+	ImagePanel imagePanel; // E se eu quiser mï¿½ltiplas janelas?
 
-	// Função main cria uma instance dinâmica da classe
+	// Funï¿½ï¿½o main cria uma instance dinï¿½mica da classe
 	public static void main(String args[])
 	{
 		new VisualCalculator();
@@ -41,10 +39,10 @@ class VisualCalculator extends Frame implements ActionListener {
 			}
 		});
 
-		// Sinalizar que não existe nenhum ImagePanel
+		// Sinalizar que nï¿½o existe nenhum ImagePanel
 		imagePanel = null;
 
-		// Criar botões 
+		// Criar botï¿½es 
 		this.setLayout(new GridLayout(4,1,1,1));
 
 		Button button = new Button("Abrir Ficheiro Imagem");
@@ -52,7 +50,7 @@ class VisualCalculator extends Frame implements ActionListener {
 		button.addActionListener(this);
 		add(button);		
 
-		button = new Button("Realizar Operação");
+		button = new Button("Realizar Operaï¿½ï¿½o");
 		button.setVisible(true);
 		button.addActionListener(this);
 		add(button);		
@@ -62,7 +60,7 @@ class VisualCalculator extends Frame implements ActionListener {
 		button.addActionListener(this);
 		add(button);
 
-		button = new Button("Adicionar ao Dicionário");
+		button = new Button("Adicionar ao Dicionï¿½rio");
 		button.setVisible(true);
 		button.addActionListener(this);
 		add(button);
@@ -76,18 +74,18 @@ class VisualCalculator extends Frame implements ActionListener {
 	}
 
 
-	// O utilizador carregou num botão
+	// O utilizador carregou num botï¿½o
 	public void actionPerformed (ActionEvent myEvent)
 	{
-		// Qual o botão premido?
+		// Qual o botï¿½o premido?
 		Button pressedButton = (Button)myEvent.getSource();
 		String nomeBotao = pressedButton.getActionCommand();
 
-		// Realizar acção adequada
+		// Realizar acï¿½ï¿½o adequada
 		if (nomeBotao.equals("Abrir Ficheiro Imagem")) abrirFicheiro();
-		else if (nomeBotao.equals("Realizar Operação")) manipularImagem();
+		else if (nomeBotao.equals("Realizar Operaï¿½ï¿½o")) manipularImagem();
 		else if (nomeBotao.equals("Guardar Resultado")) guardarResultado();
-		else if (nomeBotao.equals("Adicionar ao Dicionário")) adicionarAoDicionário();
+		else if (nomeBotao.equals("Adicionar ao Dicionï¿½rio")) adicionarAoDicionario();
 
 	}
 
@@ -95,14 +93,14 @@ class VisualCalculator extends Frame implements ActionListener {
 	private void abrirFicheiro()
 	{
 		// Load Image - Escolher nome da imagem a carregar!
-		// Bem mais interessante usar uma interface gráfica para isto...
+		// Bem mais interessante usar uma interface grï¿½fica para isto...
 		LoadImage("plus.jpg");
 
 		// Obter matriz da imagem
-		// A variável "matrix" fica com os valores de cada pixel da imagem
-		// A dimensão desta é determinada por "sizex" e "sizey"
-		// Cada valor têm 4 bytes. Estes correspondem invidividualmente a:
-		// Transparência, Vermelho, Verde, Azul
+		// A variï¿½vel "matrix" fica com os valores de cada pixel da imagem
+		// A dimensï¿½o desta ï¿½ determinada por "sizex" e "sizey"
+		// Cada valor tï¿½m 4 bytes. Estes correspondem invidividualmente a:
+		// Transparï¿½ncia, Vermelho, Verde, Azul
 		// Para aceder aos valores individuais:
 		//		red = (color >> 16) & 0xff;
 		//	    green = (color >> 8) & 0xff;
@@ -131,13 +129,13 @@ class VisualCalculator extends Frame implements ActionListener {
 		imagePanel.setVisible(true);
 	}
 
-	// Exemplo de uma função que manipula a imagem
+	// Exemplo de uma funï¿½ï¿½o que manipula a imagem
 	public void manipularImagem()
 	{
-		// Exemplo: Conversão de uma imagem a cores, para uma imagem a preto e branco
+		// Exemplo: Conversï¿½o de uma imagem a cores, para uma imagem a preto e branco
 
-		// Variáveis de apoio
-		int verde, vermelho, azul, cinzento;
+		// Variï¿½veis de apoio
+		int verde, vermelho, azul;
 		int x=0;
 		// Ciclo que percorre a imagem inteira
 		for (int i=0; i<sizey;i++){
@@ -184,14 +182,14 @@ class VisualCalculator extends Frame implements ActionListener {
 		System.out.println();
 		System.out.println();
 		
-		// Após a manipulaçao da matrix, é necessário criar o objecto gráfico (image) 
+		// Apï¿½s a manipulaï¿½ao da matrix, ï¿½ necessï¿½rio criar o objecto grï¿½fico (image) 
 		image = createImage(new MemoryImageSource(sizex, sizey, matrix, 0, sizex));
 
-		// Carregar a imagem no painel externo de visualização
+		// Carregar a imagem no painel externo de visualizaï¿½ï¿½o
 		imagePanel.newImage(image);
 	}
 
-	// Função de apoio que grava a imagem visualizada
+	// Funï¿½ï¿½o de apoio que grava a imagem visualizada
 	private void guardarResultado()
 	{
 		// Criar uma BufferedImage a partir de uma Image
@@ -200,8 +198,8 @@ class VisualCalculator extends Frame implements ActionListener {
 		bg.drawImage(image, 0, 0, null);
 		bg.dispose();
 
-		// Escrever ficheiro de saída
-		// Pq não implementar uma interface de escolha do nome?
+		// Escrever ficheiro de saï¿½da
+		// Pq nï¿½o implementar uma interface de escolha do nome?
 		try {
 			ImageIO.write(bi, "jpg", new File("resultadoPraja.jpg"));
 		} catch (IOException e) {
@@ -210,11 +208,11 @@ class VisualCalculator extends Frame implements ActionListener {
 		}
 	}
 
-	private void adicionarAoDicionário(){
+	private void adicionarAoDicionario(){
 
 	}
 
-	// Função de apoio que carrega uma imagem externa
+	// Funï¿½ï¿½o de apoio que carrega uma imagem externa
 	public void LoadImage(String fileName) {
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		image = toolkit.getImage(fileName);
@@ -224,7 +222,7 @@ class VisualCalculator extends Frame implements ActionListener {
 		catch (InterruptedException ie) {};		
 	}
 
-	// Funções de apoio para extrair os valores de R, G e B de uma imagem.
+	// Funï¿½ï¿½es de apoio para extrair os valores de R, G e B de uma imagem.
 	private int getRed(int color) { return (color >> 16) & 0xff; }
 	private int getGreen(int color) { return (color >> 8) & 0xff; }
 	private int getBlue(int color) { return color & 0xff; }
