@@ -168,20 +168,20 @@ class VisualCalculator extends Frame implements ActionListener {
 				x++;	
 			}
 		}
-		
+		/*
 		int minX=sizex, maxX=0, minY=sizey, maxY=0;
 		for (int i=0; i<sizey;i++){
 			for(int j=0; j<sizex; j++){
 				/*if(binaryMatrix[i][j]==1){
 					
-				}*/
+				}
 				System.out.print(binaryMatrix[i][j]);
 			}
 			System.out.println();
 		}
 		System.out.println();
 		System.out.println();
-		
+		*/
 		// Ap�s a manipula�ao da matrix, � necess�rio criar o objecto gr�fico (image) 
 		image = createImage(new MemoryImageSource(sizex, sizey, matrix, 0, sizex));
 
