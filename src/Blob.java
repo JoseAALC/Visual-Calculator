@@ -4,7 +4,7 @@
  * @author ze
  *
  */
-public class Blob {
+public class Blob implements Comparable<Blob> {
 	
 	/**
 	 * object matrix content filled with 1's and 0's
@@ -89,5 +89,10 @@ public class Blob {
 
 	public void setP2y(int p2y) {
 		this.p2y = p2y;
+	}
+
+	@Override
+	public int compareTo(Blob o) {
+		return ((Integer)(this.size)).compareTo(o.size);
 	}
 }
