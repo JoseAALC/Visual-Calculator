@@ -58,7 +58,16 @@ public class Processor {
 		
 	}
 	
-	
+	//maybe using median filter
+	public Image cleanNoise(Image original) {
+		return original;
+		
+	}
+	//maybe using nearest-neighbor algorithm
+	public Image resize(Image original) {
+		return original;
+		
+	}
 	
 	public ArrayList<Blob> floodFill(int binaryImage[][]) {
 		int componentCount=0;
