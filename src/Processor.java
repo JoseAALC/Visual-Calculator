@@ -60,20 +60,52 @@ public class Processor {
 	private int getBlue(int color) { return color & 0xff; }
 	private int makeColor(int red, int green, int blue) { return (255 << 24) | (red << 16) | (green << 8) | blue; }
 	
-	public ArrayList<Blob> floodFill(int segmentedImage[][]) {
+	public ArrayList<Blob> floodFill(int binaryImage[][]) {
 		int componentCount=0;
 		int componentMarker=2;
 		
-		for(int i=0; i<segmentedImage.length; i++)
-			for(int j=0; j<segmentedImage[i].length; j++){
+		for(int i=0; i<binaryImage.length; i++)
+			for(int j=0; j<binaryImage[i].length; j++){
 				
-				if(segmentedImage[i][j]==1){ //encontrou um, agora faz bloodfill
-					
+				if(binaryImage[i][j]==1){ //encontrou um, agora faz floodfill
+					dfsMarker(binaryImage,i,j,1,componentMarker);
+					componentMarker++;
+					componentCount++; // why are you interested in the number of components?
 				}
 			}
 		
+		//we will still need to save each blob
+		
 		return null;
 		
+	}
+	
+	/**
+	 * DFS responsible by the floodFill of each component
+	 * @param binaryImage the matrix with binary values
+	 * @param x the actual coordinate in x axis to analise
+	 * @param y the actual coordinate on y's axis to analise
+	 * @param conditionMarker number must be equal to this to change to marker
+	 * @param marker that will mark the numbers that must change
+	 */
+	private void dfsMarker(int binaryImage[][],int x, int y,int conditionMarker,int marker) {
+		//exceed matrix check
+		if(x >= binaryImage.length || x <0 || y >= binaryImage[0].length || y<0)
+			return;
+		//If the bit must me marked
+		if(binaryImage[x][y]==conditionMarker) {
+			binaryImage[x][y] = marker;
+			//eight directions cheking 1's
+			dfsMarker(binaryImage,x-1,y,conditionMarker,marker);
+			dfsMarker(binaryImage,x+1,y,conditionMarker,marker);
+			dfsMarker(binaryImage,x,y+1,conditionMarker,marker);
+			dfsMarker(binaryImage,x,y-1,conditionMarker,marker);
+			//diagonals
+			dfsMarker(binaryImage,x-1,y+1,conditionMarker,marker);
+			dfsMarker(binaryImage,x+1,y+1,conditionMarker,marker);
+			dfsMarker(binaryImage,x-1,y-1,conditionMarker,marker);
+			dfsMarker(binaryImage,x+1,y-1,conditionMarker,marker);
+		}
 	}
 	
 	
