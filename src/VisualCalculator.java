@@ -4,6 +4,7 @@ import java.awt.image.*;
 import javax.imageio.*;
 
 import java.io.*;
+import java.util.ArrayList;
 
 // ---------------------------------------------------------------
 // Classe que cria uma Frame principal, onde se situam os comandos
@@ -22,6 +23,7 @@ class VisualCalculator extends Frame implements ActionListener {
 	private int matrix[];
 	private int binaryMatrix[][];
 	ImagePanel imagePanel; // E se eu quiser mï¿½ltiplas janelas?
+	private Processor processor;
 
 	// Funï¿½ï¿½o main cria uma instance dinï¿½mica da classe
 	public static void main(String args[])
@@ -30,8 +32,8 @@ class VisualCalculator extends Frame implements ActionListener {
 	}
 
 	// Construtor
-	public VisualCalculator()
-	{
+	public VisualCalculator() {
+		processor = new Processor();
 		// Lidar com o evento de Fechar Janela
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -50,7 +52,7 @@ class VisualCalculator extends Frame implements ActionListener {
 		button.addActionListener(this);
 		add(button);		
 
-		button = new Button("Realizar Operaï¿½ï¿½o");
+		button = new Button("Realizar Operação");
 		button.setVisible(true);
 		button.addActionListener(this);
 		add(button);		
@@ -60,7 +62,7 @@ class VisualCalculator extends Frame implements ActionListener {
 		button.addActionListener(this);
 		add(button);
 
-		button = new Button("Adicionar ao Dicionï¿½rio");
+		button = new Button("Adicionar ao Dicionário");
 		button.setVisible(true);
 		button.addActionListener(this);
 		add(button);
@@ -83,9 +85,9 @@ class VisualCalculator extends Frame implements ActionListener {
 
 		// Realizar acï¿½ï¿½o adequada
 		if (nomeBotao.equals("Abrir Ficheiro Imagem")) abrirFicheiro();
-		else if (nomeBotao.equals("Realizar Operaï¿½ï¿½o")) manipularImagem();
+		else if (nomeBotao.equals("Realizar Operação")) manipularImagem();
 		else if (nomeBotao.equals("Guardar Resultado")) guardarResultado();
-		else if (nomeBotao.equals("Adicionar ao Dicionï¿½rio")) adicionarAoDicionario();
+		else if (nomeBotao.equals("Adicionar ao Dicionário")) adicionarAoDicionario();
 
 	}
 
@@ -96,15 +98,6 @@ class VisualCalculator extends Frame implements ActionListener {
 		// Bem mais interessante usar uma interface grï¿½fica para isto...
 		LoadImage("plus.jpg");
 
-		// Obter matriz da imagem
-		// A variï¿½vel "matrix" fica com os valores de cada pixel da imagem
-		// A dimensï¿½o desta ï¿½ determinada por "sizex" e "sizey"
-		// Cada valor tï¿½m 4 bytes. Estes correspondem invidividualmente a:
-		// Transparï¿½ncia, Vermelho, Verde, Azul
-		// Para aceder aos valores individuais:
-		//		red = (color >> 16) & 0xff;
-		//	    green = (color >> 8) & 0xff;
-		//		blue = color & 0xff;
 		sizex = image.getWidth(null);
 		sizey = image.getHeight(null);
 		matrix = new int[sizex*sizey];
@@ -129,67 +122,21 @@ class VisualCalculator extends Frame implements ActionListener {
 		imagePanel.setVisible(true);
 	}
 
-	// Exemplo de uma funï¿½ï¿½o que manipula a imagem
-	public void manipularImagem()
-	{
-		// Exemplo: Conversï¿½o de uma imagem a cores, para uma imagem a preto e branco
+	// Exemplo de uma função que manipula a imagem
+	public void manipularImagem() {
+		
+		
+		SegmentedFile segFile = processor.segment(image);
+		ArrayList<Blob> blobList = processor.floodFill(segFile.getBinaryMatrix());
+		System.out.println(blobList.size());
+		// Após a manipulaçao da matrix, se necessário criar o objecto gráfico (image) 
+		image = createImage(new MemoryImageSource(sizex, sizey, segFile.getRepresentation(), 0, sizex));
 
-		// Variï¿½veis de apoio
-		int verde, vermelho, azul;
-		int x=0;
-		// Ciclo que percorre a imagem inteira
-		for (int i=0; i<sizey;i++){
-			for(int j=0; j<sizex; j++){
-				/*
-				x=0; x < sizex*sizey; x++
-			vermelho = getRed(matrix[x]);
-			verde = getGreen(matrix[x]);
-			azul = getBlue(matrix[x]);
-
-			// Calcular luminosidade
-			cinzento = (vermelho+verde+azul)/3;
-
-			// Criar valor de cor
-			matrix[x] = makeColor(cinzento, cinzento, cinzento);
-				 */
-
-				vermelho = getRed(matrix[x]);
-				verde = getGreen(matrix[x]);
-				azul = getBlue(matrix[x]);
-
-				if(vermelho>=70 && verde>=50 && azul>=70){
-					matrix[x] = makeColor(255,255,255);
-					binaryMatrix[i][j]=0;
-				}
-				else{
-					matrix[x] = makeColor(0,0,0);
-					binaryMatrix[i][j]=1;
-				}
-				x++;	
-			}
-		}
-		/*
-		int minX=sizex, maxX=0, minY=sizey, maxY=0;
-		for (int i=0; i<sizey;i++){
-			for(int j=0; j<sizex; j++){
-				/*if(binaryMatrix[i][j]==1){
-					
-				}
-				System.out.print(binaryMatrix[i][j]);
-			}
-			System.out.println();
-		}
-		System.out.println();
-		System.out.println();
-		*/
-		// Apï¿½s a manipulaï¿½ao da matrix, ï¿½ necessï¿½rio criar o objecto grï¿½fico (image) 
-		image = createImage(new MemoryImageSource(sizex, sizey, matrix, 0, sizex));
-
-		// Carregar a imagem no painel externo de visualizaï¿½ï¿½o
+		// Carregar a imagem no painel externo de visualização
 		imagePanel.newImage(image);
 	}
 
-	// Funï¿½ï¿½o de apoio que grava a imagem visualizada
+	// Função de apoio que grava a imagem visualizada
 	private void guardarResultado()
 	{
 		// Criar uma BufferedImage a partir de uma Image
