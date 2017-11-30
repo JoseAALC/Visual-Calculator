@@ -2,6 +2,7 @@ import java.awt.Image;
 import java.awt.image.PixelGrabber;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 
 public class Processor {
 
@@ -134,8 +135,11 @@ public class Processor {
 		//System.out.println(blobMatrix.length);
 		//System.out.println(blobMatrix[0].length);
 		for(int i =bounds.getUpperBond(); i<=bounds.getLowerBond();i++) 
-			for(int j=bounds.getLeftBond();j<=bounds.getRightBond();j++)
+			for(int j=bounds.getLeftBond();j<=bounds.getRightBond();j++) {
+				//System.out.println("Y: " + i+ " " + matrix.length);
+				//System.out.println("X: " + j+ " " + matrix[0].length);
 				blobMatrix[i-bounds.getUpperBond()][j-bounds.getLeftBond()] = matrix[i][j];
+			}
 		return blobMatrix;
 	}
 	
@@ -149,46 +153,48 @@ public class Processor {
 	 */ 
 	private Bounds dfsMarker(int binaryImage[][],int x, int y,int conditionMarker,int marker) {
 		//exceed matrix check
-		if(x >= binaryImage[0].length || x <0 || y >= binaryImage.length || y<0){
-			System.out.println("C1");
-			return new Bounds( -1,binaryImage.length,binaryImage[0].length,-1,0);
-		}
-		//If the bit must me marked
-		if(binaryImage[y][x]==conditionMarker) {
-			binaryImage[y][x] = marker;
+		
+		LinkedList<Point> points = new LinkedList<Point>();
+		
+		points.addFirst(new Point(x,y));
+		int size=0,lb= -1 ,leb = binaryImage[0].length,ub = binaryImage.length,rb= -1;
+		while(!points.isEmpty()) {
+			Point p = points.removeFirst();
+			x = p.getX();
+			y = p.getY();
+		
+		
+		
+		
+			if(x >= binaryImage[0].length || x <0 || y >= binaryImage.length || y<0){
+				continue;
+			}
+			//If the bit must me marked
+			if(binaryImage[y][x]==conditionMarker) {
+				binaryImage[y][x] = marker;
 			
+		
+				//eight directions cheking 1's
+				points.addFirst(new Point(x-1,y));
+				points.addFirst(new Point(x+1,y));
+				points.addFirst(new Point(x,y+1));
+				points.addFirst(new Point(x,y-1));
+
+				size +=1;
+				lb = Math.max(lb,y);
+				ub = Math.min(ub,y);
+				leb = Math.min(leb,x);
+				//System.out.println("Ys: "+y+"LB: "+ lb );
+				
+				rb = Math.max(rb,x);
+		
 			
-			/*for(int p=0; p<binaryImage.length;p++){
-				for(int o=0; o<binaryImage[0].length; o++){
-					System.out.print(binaryImage[p][o]);
-				}
-				System.out.println();
-			}*/
-			
-			Bounds b1,b2,b3,b4,b5,b6,b7,b8;
-			//eight directions cheking 1's
-			b1 =dfsMarker(binaryImage,x-1,y,conditionMarker,marker);
-			b2 = dfsMarker(binaryImage,x+1,y,conditionMarker,marker);
-			b3 =dfsMarker(binaryImage,x,y+1,conditionMarker,marker);
-			b4 =dfsMarker(binaryImage,x,y-1,conditionMarker,marker);
-			//diagonals
-			//b5=dfsMarker(binaryImage,x-1,y+1,conditionMarker,marker);
-			//b6=dfsMarker(binaryImage,x+1,y+1,conditionMarker,marker);
-			//b7=dfsMarker(binaryImage,x-1,y-1,conditionMarker,marker);
-			//b8=dfsMarker(binaryImage,x+1,y-1,conditionMarker,marker);
-			
-			int size =1 +b1.getSize() + b2.getSize() + b3.getSize() + b4.getSize();
-			int lb = Math.max(b1.getLowerBond(),Math.max(b2.getLowerBond(),Math.max(b3.getLowerBond(),Math.max(b4.getLowerBond(),y))));
-			int ub = Math.min(b1.getUpperBond(), Math.min(b2.getUpperBond(),Math.min(b3.getUpperBond(),Math.min(b4.getUpperBond(),y))));
-			int leb = Math.min(b1.getLeftBond(), Math.min(b2.getLeftBond(), Math.min(b3.getLeftBond(), Math.min(b4.getLeftBond(), x))));
-			int rb = Math.max(b1.getRightBond(), Math.max(b2.getRightBond(), Math.max(b3.getRightBond(), Math.max(b4.getRightBond(), x))));
-			//System.out.println("DE:" +lb+" "+ y);
-			return new Bounds(lb, ub, leb, rb,size);
 				
 					
+			}
 		}
-		System.out.println("C2");
-		return new Bounds( -1,binaryImage.length,binaryImage[0].length,-1,0);
+		
+			return new Bounds(lb, ub, leb, rb,size);
 	}
 	
 	
