@@ -6,18 +6,18 @@ import java.util.ArrayList;
  *
  */
 public class Database {
-	private ArrayList<Blob> blobs;
+	private ArrayList<DatabaseItem> blobs;
 	
 	public Database() {
-		blobs = new ArrayList<Blob>();
+		blobs = new ArrayList<DatabaseItem>();
 	}
 	
 	/**
 	 *  adds an blob to database
 	 * @param blob to be added to database
 	 */
-	public void addBlob(Blob blob) {
-		blobs.add(blob);
+	public void addBlob(Blob blob,Character symbol) {
+		blobs.add(new DatabaseItem(blob,symbol));
 	}
 	/**
 	 * 
@@ -51,13 +51,13 @@ public class Database {
 		int max =-1;
 		int maxindex = -1;
 		for(int i=0;i<blobs.size();i++) {
-			int corr = correlationCompute(test,blobs.get(i));
+			int corr = correlationCompute(test,blobs.get(i).getBlob());
 			if( corr > max) {
 				max = corr;
 				maxindex = i;
 			}
 		}
-		return blobs.get(maxindex);
+		return blobs.get(maxindex).getBlob();
 	}
 	
 	
