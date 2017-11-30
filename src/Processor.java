@@ -80,17 +80,18 @@ public class Processor {
 			for(int j=0; j<binaryImage[i].length; j++){
 				
 				if(binaryImage[i][j]==1){ //encontrou um, agora faz floodfill
+					
 					Bounds bounds =dfsMarker(binaryImage,i,j,1,componentMarker);
-					Blob blob = new Blob(null,bounds.getLeftBond(),bounds.getUpperBond(),bounds.getRightBond(),bounds.getLowerBond(),componentMarker,bounds.getSize());
+					
+					int blobMatrix[][] = copyMatrix(bounds, binaryImage);
+					Blob blob = new Blob(blobMatrix,bounds,componentMarker);
 					componentMarker++;
 					componentCount++; // why are you interested in the number of components?
 					blobList.add(blob);
 				}
 			}
 		
-		//we will still need to save each blob
-		
-		return blobList;
+		return removeFalseBlobs(blobList);
 		
 	}
 	
@@ -99,7 +100,7 @@ public class Processor {
 	 * @param listOfBlobs
 	 * @return Blob list free of noise
 	 */
-	public ArrayList<Blob> removeFalseBlobs(ArrayList<Blob> listOfBlobs){
+	private ArrayList<Blob> removeFalseBlobs(ArrayList<Blob> listOfBlobs){
 		//My idea is that, the bigger difference between sizes of blobs corresponds to the break point
 		//between blobs and noises.
 		//this is only an idea I can be wrong, right?
@@ -118,6 +119,20 @@ public class Processor {
 		
 		return (ArrayList<Blob>)listOfBlobs.subList(maxDifferenceIndex, listOfBlobs.size());
 		
+	}
+	
+	/**
+	 * method to get the matrix to copy to the blob
+	 * @param bounds
+	 * @param matrix
+	 * @return
+	 */
+	private int[][] copyMatrix(Bounds bounds,int matrix[][]) {
+		int blobMatrix [][] = new int[bounds.getRightBond()][bounds.getLowerBond()] ;
+		for(int i =bounds.getLeftBond(); i<=bounds.getRightBond();i++) 
+			for(int j=bounds.getUpperBond();j<=bounds.getLowerBond();j++)
+				blobMatrix[i][j] = matrix[i][j];
+		return blobMatrix;
 	}
 	
 	/**
@@ -145,16 +160,18 @@ public class Processor {
 			b3 =dfsMarker(binaryImage,x,y+1,conditionMarker,marker);
 			b4 =dfsMarker(binaryImage,x,y-1,conditionMarker,marker);
 			//diagonals
-			b5=dfsMarker(binaryImage,x-1,y+1,conditionMarker,marker);
-			b6=dfsMarker(binaryImage,x+1,y+1,conditionMarker,marker);
-			b7=dfsMarker(binaryImage,x-1,y-1,conditionMarker,marker);
-			b8=dfsMarker(binaryImage,x+1,y-1,conditionMarker,marker);
+			//b5=dfsMarker(binaryImage,x-1,y+1,conditionMarker,marker);
+			//b6=dfsMarker(binaryImage,x+1,y+1,conditionMarker,marker);
+			//b7=dfsMarker(binaryImage,x-1,y-1,conditionMarker,marker);
+			//b8=dfsMarker(binaryImage,x+1,y-1,conditionMarker,marker);
 			
-			int size =1 +b1.getSize() + b2.getSize() + b3.getSize() + b4.getSize() + b5.getSize()+b6.getSize() + b7.getSize() + b8.getSize();
-			int lb = Math.max(b1.getLowerBond(),Math.max(b2.getLowerBond(),Math.max(b3.getLowerBond(),Math.max(b4.getLowerBond(),Math.max(b5.getLowerBond(),Math.max(b6.getLowerBond(),Math.max(b7.getLowerBond(),b8.getLowerBond())))))));
-			//int ub = Math.min(b1.getLowerBond(),Math.min(b2.getLowerBond(),Math.max(b3.getLowerBond(),Math.max(b4.getLowerBond(),Math.max(b5.getLowerBond(),Math.max(b6.getLowerBond(),Math.max(b7.getLowerBond(),b8.getLowerBond())))))));
-			//falta acabar
-			return new Bounds(lb, marker, marker, marker,size);
+			int size =1 +b1.getSize() + b2.getSize() + b3.getSize() + b4.getSize();
+			int lb = Math.max(b1.getLowerBond(),Math.max(b2.getLowerBond(),Math.max(b3.getLowerBond(),Math.max(b4.getLowerBond(),y))));
+			int ub = Math.min(b1.getUpperBond(), Math.min(b2.getUpperBond(),Math.min(b3.getUpperBond(),Math.min(b4.getUpperBond(),y))));
+			int leb = Math.min(b1.getLeftBond(), Math.min(b2.getLeftBond(), Math.min(b3.getLeftBond(), Math.min(b4.getLeftBond(), x))));
+			int rb = Math.max(b1.getRightBond(), Math.max(b2.getRightBond(), Math.max(b3.getRightBond(), Math.max(b4.getRightBond(), x))));
+			
+			return new Bounds(lb, ub, leb, rb,size);
 				
 					
 		}

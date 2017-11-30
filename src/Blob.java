@@ -40,8 +40,7 @@ public class Blob implements Comparable<Blob> {
 		this.size = size;
 	}
 
-	public Blob(int[][] content, int p1x, int p1y, int p2x, int p2y, int iD, int size) {
-		super();
+	public Blob(int[][] content, int p1x, int p1y, int p2x, int p2y, int size,int iD) {
 		this.content = content;
 		this.p1x = p1x;
 		this.p1y = p1y;
@@ -49,6 +48,11 @@ public class Blob implements Comparable<Blob> {
 		this.p2y = p2y;
 		ID = iD;
 		this.size = size;
+	}
+	
+	public Blob(int[][] content,Bounds bounds,int ID) {
+		this(content,bounds.getLeftBond(),bounds.getUpperBond(),bounds.getRightBond(),bounds.getLowerBond(),bounds.getSize(),ID);
+		
 	}
 
 	public int[][] getContent() {

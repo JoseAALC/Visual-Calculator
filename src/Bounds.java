@@ -9,6 +9,7 @@ public class Bounds {
 	private int leftBond;
 	private int rightBond;
 	private int size;
+	
 	public Bounds(int lowerBond, int upperBond, int leftBond, int rightBond, int size) {
 		super();
 		this.lowerBond = lowerBond;
