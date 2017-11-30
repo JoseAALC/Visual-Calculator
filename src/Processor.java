@@ -9,7 +9,7 @@ public class Processor {
 	
 	
 	
-	public SegmentedFile Segment(Image original) {
+	public SegmentedFile segment(Image original) {
 		//get Image Atributes
 		int sizex = original.getWidth(null);
 		int sizey = original.getHeight(null);
@@ -81,7 +81,7 @@ public class Processor {
 				
 				if(binaryImage[i][j]==1){ //encontrou um, agora faz floodfill
 					
-					Bounds bounds =dfsMarker(binaryImage,i,j,1,componentMarker);
+					Bounds bounds =dfsMarker(binaryImage,j,i,1,componentMarker);
 					
 					int blobMatrix[][] = copyMatrix(bounds, binaryImage);
 					Blob blob = new Blob(blobMatrix,bounds,componentMarker);
@@ -128,10 +128,14 @@ public class Processor {
 	 * @return
 	 */
 	private int[][] copyMatrix(Bounds bounds,int matrix[][]) {
-		int blobMatrix [][] = new int[bounds.getRightBond()][bounds.getLowerBond()] ;
-		for(int i =bounds.getLeftBond(); i<=bounds.getRightBond();i++) 
-			for(int j=bounds.getUpperBond();j<=bounds.getLowerBond();j++)
-				blobMatrix[i][j] = matrix[i][j];
+		System.out.println(bounds.getLowerBond()+" "+bounds.getUpperBond()+" "+bounds.getRightBond()+" "+bounds.getLeftBond()+" "+ bounds.getSize());
+		int blobMatrix [][] = new int[bounds.getLowerBond() - bounds.getUpperBond()+1][bounds.getRightBond()-bounds.getLeftBond()+1];
+
+		//System.out.println(blobMatrix.length);
+		//System.out.println(blobMatrix[0].length);
+		for(int i =bounds.getUpperBond(); i<=bounds.getLowerBond();i++) 
+			for(int j=bounds.getLeftBond();j<=bounds.getRightBond();j++)
+				blobMatrix[i-bounds.getUpperBond()][j-bounds.getLeftBond()] = matrix[i][j];
 		return blobMatrix;
 	}
 	
@@ -145,13 +149,21 @@ public class Processor {
 	 */ 
 	private Bounds dfsMarker(int binaryImage[][],int x, int y,int conditionMarker,int marker) {
 		//exceed matrix check
-		if(x >= binaryImage.length || x <0 || y >= binaryImage[0].length || y<0)
-			return new Bounds( -1,binaryImage[0].length,binaryImage[0].length,-1,0);
+		if(x >= binaryImage[0].length || x <0 || y >= binaryImage.length || y<0){
+			System.out.println("C1");
+			return new Bounds( -1,binaryImage.length,binaryImage[0].length,-1,0);
+		}
 		//If the bit must me marked
-		if(binaryImage[x][y]==conditionMarker) {
-			binaryImage[x][y] = marker;
+		if(binaryImage[y][x]==conditionMarker) {
+			binaryImage[y][x] = marker;
 			
 			
+			/*for(int p=0; p<binaryImage.length;p++){
+				for(int o=0; o<binaryImage[0].length; o++){
+					System.out.print(binaryImage[p][o]);
+				}
+				System.out.println();
+			}*/
 			
 			Bounds b1,b2,b3,b4,b5,b6,b7,b8;
 			//eight directions cheking 1's
@@ -170,12 +182,13 @@ public class Processor {
 			int ub = Math.min(b1.getUpperBond(), Math.min(b2.getUpperBond(),Math.min(b3.getUpperBond(),Math.min(b4.getUpperBond(),y))));
 			int leb = Math.min(b1.getLeftBond(), Math.min(b2.getLeftBond(), Math.min(b3.getLeftBond(), Math.min(b4.getLeftBond(), x))));
 			int rb = Math.max(b1.getRightBond(), Math.max(b2.getRightBond(), Math.max(b3.getRightBond(), Math.max(b4.getRightBond(), x))));
-			
+			//System.out.println("DE:" +lb+" "+ y);
 			return new Bounds(lb, ub, leb, rb,size);
 				
 					
 		}
-		return new Bounds( -1,binaryImage[0].length,binaryImage[0].length,-1,0);
+		System.out.println("C2");
+		return new Bounds( -1,binaryImage.length,binaryImage[0].length,-1,0);
 	}
 	
 	
