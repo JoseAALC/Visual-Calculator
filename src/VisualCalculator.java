@@ -52,7 +52,7 @@ class VisualCalculator extends Frame implements ActionListener {
 		button.addActionListener(this);
 		add(button);		
 
-		button = new Button("Realizar Operação");
+		button = new Button("Realizar Operaï¿½ï¿½o");
 		button.setVisible(true);
 		button.addActionListener(this);
 		add(button);		
@@ -62,7 +62,7 @@ class VisualCalculator extends Frame implements ActionListener {
 		button.addActionListener(this);
 		add(button);
 
-		button = new Button("Adicionar ao Dicionário");
+		button = new Button("Adicionar ao Dicionï¿½rio");
 		button.setVisible(true);
 		button.addActionListener(this);
 		add(button);
@@ -85,9 +85,9 @@ class VisualCalculator extends Frame implements ActionListener {
 
 		// Realizar acï¿½ï¿½o adequada
 		if (nomeBotao.equals("Abrir Ficheiro Imagem")) abrirFicheiro();
-		else if (nomeBotao.equals("Realizar Operação")) manipularImagem();
+		else if (nomeBotao.equals("Realizar Operaï¿½ï¿½o")) manipularImagem();
 		else if (nomeBotao.equals("Guardar Resultado")) guardarResultado();
-		else if (nomeBotao.equals("Adicionar ao Dicionário")) adicionarAoDicionario();
+		else if (nomeBotao.equals("Adicionar ao Dicionï¿½rio")) adicionarAoDicionario();
 
 	}
 
@@ -96,7 +96,7 @@ class VisualCalculator extends Frame implements ActionListener {
 	{
 		// Load Image - Escolher nome da imagem a carregar!
 		// Bem mais interessante usar uma interface grï¿½fica para isto...
-		LoadImage("plus.jpg");
+		LoadImage("cancela.jpg");
 
 		sizex = image.getWidth(null);
 		sizey = image.getHeight(null);
@@ -122,21 +122,27 @@ class VisualCalculator extends Frame implements ActionListener {
 		imagePanel.setVisible(true);
 	}
 
-	// Exemplo de uma função que manipula a imagem
+	// Exemplo de uma funï¿½ï¿½o que manipula a imagem
 	public void manipularImagem() {
 		
+		NoiseFilter noise = new NoiseFilter();
+		int matrix[] = noise.medianFilter(3, 3, image);
 		
+		image = createImage(new MemoryImageSource(sizex, sizey, matrix, 0, sizex));
+		
+		// Carregar a imagem no painel externo de visualizaï¿½ï¿½o
+		imagePanel.newImage(image);
 		SegmentedFile segFile = processor.segment(image);
-		ArrayList<Blob> blobList = processor.floodFill(segFile.getBinaryMatrix());
-		System.out.println(blobList.size());
-		// Após a manipulaçao da matrix, se necessário criar o objecto gráfico (image) 
+		//ArrayList<Blob> blobList = processor.floodFill(segFile.getBinaryMatrix());
+		//System.out.println(blobList.size());
+		// Apï¿½s a manipulaï¿½ao da matrix, se necessï¿½rio criar o objecto grï¿½fico (image) 
 		image = createImage(new MemoryImageSource(sizex, sizey, segFile.getRepresentation(), 0, sizex));
 
-		// Carregar a imagem no painel externo de visualização
+		// Carregar a imagem no painel externo de visualizaï¿½ï¿½o
 		imagePanel.newImage(image);
 	}
 
-	// Função de apoio que grava a imagem visualizada
+	// Funï¿½ï¿½o de apoio que grava a imagem visualizada
 	private void guardarResultado()
 	{
 		// Criar uma BufferedImage a partir de uma Image

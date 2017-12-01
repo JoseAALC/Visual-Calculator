@@ -39,7 +39,7 @@ public class Processor {
 				verde = getGreen(matrix[x]);
 				azul = getBlue(matrix[x]);
 				
-				if(vermelho>=70 && verde>=50 && azul>=70){
+				if(vermelho>=50 && verde>=100  && azul>=100){
 					matrix[x] = makeColor(255,255,255);
 					binaryMatrix[i][j]=0;
 				}
