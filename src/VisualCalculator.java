@@ -3,8 +3,11 @@ import java.awt.event.*;
 import java.awt.image.*;
 import javax.imageio.*;
 
+
+
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 // ---------------------------------------------------------------
 // Classe que cria uma Frame principal, onde se situam os comandos
@@ -21,7 +24,6 @@ class VisualCalculator extends Frame implements ActionListener {
 	private int sizex;
 	private int sizey;;
 	private int matrix[];
-	private int binaryMatrix[][];
 	ImagePanel imagePanel; // E se eu quiser m�ltiplas janelas?
 	private Processor processor;
 
@@ -96,12 +98,11 @@ class VisualCalculator extends Frame implements ActionListener {
 	{
 		// Load Image - Escolher nome da imagem a carregar!
 		// Bem mais interessante usar uma interface gr�fica para isto...
-		LoadImage("cancela.jpg");
+		LoadImage("plus.jpg");
 
 		sizex = image.getWidth(null);
 		sizey = image.getHeight(null);
 		matrix = new int[sizex*sizey];
-		binaryMatrix = new int[sizey][sizex];
 		PixelGrabber pg = new PixelGrabber(image, 0, 0, sizex, sizey, matrix, 0, sizex);
 		try {
 			pg.grabPixels();
@@ -133,10 +134,12 @@ class VisualCalculator extends Frame implements ActionListener {
 		// Carregar a imagem no painel externo de visualiza��o
 		imagePanel.newImage(image);
 		SegmentedFile segFile = processor.segment(image);
-		//ArrayList<Blob> blobList = processor.floodFill(segFile.getBinaryMatrix());
-		//System.out.println(blobList.size());
+		ArrayList<Blob> blobList = processor.floodFill(segFile.getBinaryMatrix());
+		System.out.println("Size: " +blobList.size());
+		Collections.sort(blobList);
+		image = createImage(new MemoryImageSource(sizex, sizey, blobList.get(blobList.size()-1).getMatrixImage(), 0, sizex));
 		// Ap�s a manipula�ao da matrix, se necess�rio criar o objecto gr�fico (image) 
-		image = createImage(new MemoryImageSource(sizex, sizey, segFile.getRepresentation(), 0, sizex));
+		//image = createImage(new MemoryImageSource(sizex, sizey, segFile.getRepresentation(), 0, sizex));
 
 		// Carregar a imagem no painel externo de visualiza��o
 		imagePanel.newImage(image);
@@ -174,10 +177,4 @@ class VisualCalculator extends Frame implements ActionListener {
 		try { mediaTracker.waitForID(0); }
 		catch (InterruptedException ie) {};		
 	}
-
-	// Fun��es de apoio para extrair os valores de R, G e B de uma imagem.
-	private int getRed(int color) { return (color >> 16) & 0xff; }
-	private int getGreen(int color) { return (color >> 8) & 0xff; }
-	private int getBlue(int color) { return color & 0xff; }
-	private int makeColor(int red, int green, int blue) { return (255 << 24) | (red << 16) | (green << 8) | blue; }
 }

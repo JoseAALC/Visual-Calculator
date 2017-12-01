@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 
-public class Processor {
+public class Processor extends RGBProcessor {
 
 	public Processor() {};
 	
@@ -92,7 +92,7 @@ public class Processor {
 				}
 			}
 		
-		return removeFalseBlobs(blobList);
+		return (blobList);
 		
 	}
 	
@@ -101,7 +101,7 @@ public class Processor {
 	 * @param listOfBlobs
 	 * @return Blob list free of noise
 	 */
-	private ArrayList<Blob> removeFalseBlobs(ArrayList<Blob> listOfBlobs){
+	public ArrayList<Blob> removeFalseBlobs(ArrayList<Blob> listOfBlobs){
 		//My idea is that, the bigger difference between sizes of blobs corresponds to the break point
 		//between blobs and noises.
 		//this is only an idea I can be wrong, right?
@@ -116,9 +116,13 @@ public class Processor {
 			}
 		
 		}
+		
+		ArrayList<Blob> result = new ArrayList<Blob>();
+		for(int i =maxDifferenceIndex;i<listOfBlobs.size();i++)
+			result.add(listOfBlobs.get(i));
 			
 		
-		return (ArrayList<Blob>)listOfBlobs.subList(maxDifferenceIndex, listOfBlobs.size());
+		return result;
 		
 	}
 	
@@ -129,15 +133,12 @@ public class Processor {
 	 * @return
 	 */
 	private int[][] copyMatrix(Bounds bounds,int matrix[][]) {
-		System.out.println(bounds.getLowerBond()+" "+bounds.getUpperBond()+" "+bounds.getRightBond()+" "+bounds.getLeftBond()+" "+ bounds.getSize());
+	
 		int blobMatrix [][] = new int[bounds.getLowerBond() - bounds.getUpperBond()+1][bounds.getRightBond()-bounds.getLeftBond()+1];
 
-		//System.out.println(blobMatrix.length);
-		//System.out.println(blobMatrix[0].length);
 		for(int i =bounds.getUpperBond(); i<=bounds.getLowerBond();i++) 
 			for(int j=bounds.getLeftBond();j<=bounds.getRightBond();j++) {
-				//System.out.println("Y: " + i+ " " + matrix.length);
-				//System.out.println("X: " + j+ " " + matrix[0].length);
+
 				blobMatrix[i-bounds.getUpperBond()][j-bounds.getLeftBond()] = matrix[i][j];
 			}
 		return blobMatrix;
@@ -174,7 +175,7 @@ public class Processor {
 				binaryImage[y][x] = marker;
 			
 		
-				//eight directions cheking 1's
+				//four directions cheking 1's
 				points.addFirst(new Point(x-1,y));
 				points.addFirst(new Point(x+1,y));
 				points.addFirst(new Point(x,y+1));
@@ -184,8 +185,6 @@ public class Processor {
 				lb = Math.max(lb,y);
 				ub = Math.min(ub,y);
 				leb = Math.min(leb,x);
-				//System.out.println("Ys: "+y+"LB: "+ lb );
-				
 				rb = Math.max(rb,x);
 		
 			
@@ -199,8 +198,5 @@ public class Processor {
 	
 	
 	
-	private int getRed(int color) { return (color >> 16) & 0xff; }
-	private int getGreen(int color) { return (color >> 8) & 0xff; }
-	private int getBlue(int color) { return color & 0xff; }
-	private int makeColor(int red, int green, int blue) { return (255 << 24) | (red << 16) | (green << 8) | blue; }
+	
 }

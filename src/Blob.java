@@ -54,6 +54,21 @@ public class Blob implements Comparable<Blob> {
 		this(content,bounds.getLeftBond(),bounds.getUpperBond(),bounds.getRightBond(),bounds.getLowerBond(),bounds.getSize(),ID);
 		
 	}
+	
+	public int[] getMatrixImage() {
+		int matrix[] = new int[content.length*content[0].length];
+		int x =0;
+		for(int j=0; j<content[0].length;j++) {
+			for(int i=0;i<content.length;i++) {
+				matrix[x++] = (content[i][j]==1 ? makeColor(255, 255, 255):makeColor(0, 0, 0));
+			}
+		}
+		for(int i=0;i<matrix.length;i++)
+			System.out.println(matrix[i]);
+		return matrix;
+	}
+	
+	
 
 	public int[][] getContent() {
 		return content;
@@ -99,4 +114,6 @@ public class Blob implements Comparable<Blob> {
 	public int compareTo(Blob o) {
 		return ((Integer)(this.size)).compareTo(o.size);
 	}
+	
+	protected int makeColor(int red, int green, int blue) { return (255 << 24) | (red << 16) | (green << 8) | blue; }
 }
