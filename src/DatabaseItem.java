@@ -1,5 +1,7 @@
+import java.io.Serializable;
 
-public class DatabaseItem {
+public class DatabaseItem implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private Blob blob;
 	private Character symbol;
 	

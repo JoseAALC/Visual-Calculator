@@ -1,11 +1,13 @@
+import java.io.Serializable;
 
 /**
  * Binary matrix object representative of an finded symbol
  * @author ze
  *
  */
-public class Blob implements Comparable<Blob> {
+public class Blob implements Comparable<Blob>, Serializable {
 
+	private static final long serialVersionUID = 1L;
 	/**
 	 * object matrix content filled with 1's and 0's
 	 */
