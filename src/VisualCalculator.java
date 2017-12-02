@@ -141,7 +141,7 @@ class VisualCalculator extends Frame implements ActionListener {
 
 	// Abrir um ficheiro de Imagem
 	private void openFile() {
-		LoadImage("divide.jpg");
+		LoadImage("conta.jpg");
 
 		sizex = image.getWidth(null);
 		sizey = image.getHeight(null);
@@ -168,7 +168,7 @@ class VisualCalculator extends Frame implements ActionListener {
 
 	public void applyFilter(){
 		NoiseFilter noise = new NoiseFilter();
-		int matrix[] = noise.medianFilter(10, 10, image);
+		int matrix[] = noise.medianFilter(9,9, image);
 		image = createImage(new MemoryImageSource(sizex, sizey, matrix, 0, sizex));
 		// Carregar a imagem no painel externo de visualizacao
 		imagePanel.newImage(image);
