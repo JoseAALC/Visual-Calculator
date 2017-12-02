@@ -15,7 +15,7 @@ public class Blob implements Comparable<Blob>, Serializable {
 	/**
 	 * corner points of the object
 	 */
-	private int p1x, p1y, p2x,p2y;
+	private int p1x, p1y, p2x, p2y;
 	/*
 	 * number of the Blob
 	 */

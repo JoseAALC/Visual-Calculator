@@ -43,12 +43,15 @@ class VisualCalculator extends Frame implements ActionListener {
 		try {
 		    si = new FileInputStream("database.ser");
 		    ois = new ObjectInputStream(si);
-	        dataBase = (Database) ois.readObject();    
-	        System.out.println("entrou na database");
+	        dataBase = (Database) ois.readObject();
+	        //dataBase.removeBlob('-');
+	        System.out.println("entrou na database "+dataBase.getSize());
+	        
 		} catch (Exception e) {
 		    if(e instanceof FileNotFoundException){
 		    	FileOutputStream fot = new FileOutputStream("database.ser", false);
 		    	System.out.println("criou database");
+		    	dataBase = new Database();
 		    	ObjectOutputStream oos = new ObjectOutputStream(fot);
 		    	oos.writeObject(dataBase);
 		    	oos.close();
@@ -140,16 +143,21 @@ class VisualCalculator extends Frame implements ActionListener {
 		else if (nomeBotao.equals("Apply Segmentation")) applySegmentation();
 		else if (nomeBotao.equals("Apply FloodFill")) applyFloodFill();
 		else if (nomeBotao.equals("Remove Shadow")) removeShadows();
-		else if (nomeBotao.equals("Save File")) guardarResultado();
-		else if (nomeBotao.equals("Add to Database")) adicionarAoDicionario();
-		
+		else if (nomeBotao.equals("Save File")) saveFile();
+		else if (nomeBotao.equals("Add to Database"))
+			try {
+				saveToDatabase();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		else if (nomeBotao.equals("Resize")) resizeImage();
 		
 	}
 
 	// Abrir um ficheiro de Imagem
 	private void openFile() {
-		LoadImage("plus.jpg");
+		LoadImage("equals.jpg");
 
 		sizex = image.getWidth(null);
 		sizey = image.getHeight(null);
@@ -208,7 +216,8 @@ class VisualCalculator extends Frame implements ActionListener {
 					
 			}
 		
-		double sx = 300.f/sizex,sy =500.f/sizey;
+		double sx = 300.f/sizex;
+		double sy =500.f/sizey;
 		
 		matrix = processor.resize(binaryMatrix, matrix, sx, sy);
 		image = createImage(new MemoryImageSource((int)(sx*sizex), (int)(sy*sizey), matrix, 0, (int)(sx*sizex)));
@@ -245,12 +254,9 @@ class VisualCalculator extends Frame implements ActionListener {
 		
 	}
 	
-	public void manipularImagem() {
-		
-	}
-
+	
 	// Fun��o de apoio que grava a imagem visualizada
-	private void guardarResultado()
+	private void saveFile()
 	{
 		// Criar uma BufferedImage a partir de uma Image
 		BufferedImage bi = new BufferedImage(image.getWidth(null),image.getHeight(null),BufferedImage.TYPE_INT_RGB);
@@ -268,8 +274,30 @@ class VisualCalculator extends Frame implements ActionListener {
 		}
 	}
 
-	private void adicionarAoDicionario(){
-
+	public void saveToDatabase() throws IOException{
+		int sizex = image.getWidth(null);
+		int sizey = image.getHeight(null);
+		
+		int matrix[] = new int[sizex*sizey];
+		int binaryMatrix[][] = new int[sizey][sizex];
+		PixelGrabber pg = new PixelGrabber(image, 0, 0, sizex, sizey, matrix, 0, sizex);
+		try {
+			pg.grabPixels();
+		} catch (InterruptedException e) {
+			System.err.println("interrupted waiting for pixels!");
+		}
+		
+		int x=0;
+		for (int i=0; i<sizey;i++){
+			for(int j=0; j<sizex; j++){
+				binaryMatrix[i][j]=matrix[x];
+				x++;
+			}
+		}
+		
+		Blob t = new Blob(binaryMatrix, 0, 0, sizex, sizey, sizex*sizey, 0);
+		dataBase.addBlob(t,'=');
+				
 	}
 
 	// Fun��o de apoio que carrega uma imagem externa

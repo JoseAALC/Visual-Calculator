@@ -1,3 +1,7 @@
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -14,12 +18,34 @@ public class Database implements Serializable{
 		blobs = new ArrayList<DatabaseItem>();
 	}
 	
+	public int getSize(){
+		return blobs.size();
+	}
+	
+	public void removeBlob(char c) throws IOException{
+		for(int i=0; i<blobs.size(); i++){
+			if(blobs.get(i).getSymbol().equals(c)){
+				blobs.remove(i);
+				FileOutputStream fot = new FileOutputStream("database.ser", false);
+				ObjectOutputStream oos = new ObjectOutputStream(fot);
+		    	oos.writeObject(this);
+		    	oos.close();
+				break;
+			}
+		}
+	}
+	
 	/**
 	 *  adds an blob to database
 	 * @param blob to be added to database
+	 * @throws IOException 
 	 */
-	public void addBlob(Blob blob,Character symbol) {
+	public void addBlob(Blob blob,Character symbol) throws IOException {
 		blobs.add(new DatabaseItem(blob,symbol));
+		FileOutputStream fot = new FileOutputStream("database.ser", false);
+		ObjectOutputStream oos = new ObjectOutputStream(fot);
+    	oos.writeObject(this);
+    	oos.close();
 	}
 	/**
 	 * 
