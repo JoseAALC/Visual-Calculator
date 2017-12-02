@@ -149,7 +149,7 @@ class VisualCalculator extends Frame implements ActionListener {
 
 	// Abrir um ficheiro de Imagem
 	private void openFile() {
-		LoadImage("divide.jpg");
+		LoadImage("plus.jpg");
 
 		sizex = image.getWidth(null);
 		sizey = image.getHeight(null);
@@ -208,16 +208,20 @@ class VisualCalculator extends Frame implements ActionListener {
 					
 			}
 		
-		matrix = processor.resize(binaryMatrix, matrix, 0.25, 0.45);
-		image = createImage(new MemoryImageSource((int)(0.25*sizex), (int)(0.45*sizey), matrix, 0, (int)(0.25*sizex)));
+		double sx = 300.f/sizex,sy =500.f/sizey;
+		
+		matrix = processor.resize(binaryMatrix, matrix, sx, sy);
+		image = createImage(new MemoryImageSource((int)(sx*sizex), (int)(sy*sizey), matrix, 0, (int)(sx*sizex)));
 		imagePanel.newImage(image);
 		
+		
+		System.out.println("W: " + image.getWidth(null) + " H: " +image.getHeight(null));
 	}
 	
 	
 	public void removeShadows() {
 		segFile = processor.eliminateLateraShadow(segFile);
-		image = createImage(new MemoryImageSource((int)(sizex*0.25), (int)(sizey*0.45), processor.resize(segFile.getBinaryMatrix(), segFile.getRepresentation(),0.25,0.45), 0, (int)(sizex*0.25)));
+		image = createImage(new MemoryImageSource((int)(sizex), (int)(sizey), segFile.getRepresentation(), 0, (int)(sizex)));
 		
 		imagePanel.newImage(image);
 	}
