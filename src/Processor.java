@@ -63,17 +63,17 @@ public class Processor extends RGBProcessor {
 	}
 	
 	//maybe using nearest-neighbor algorithm
-	public int[] resize(int image[][],int mat[],double sf) {
+	public int[] resize(int image[][],int mat[],double sf,double sf2) {
 		
 		
 		int scaledWidth = (int)(sf*image[0].length);
-		int scaledHeight = (int)(sf*image.length);
+		int scaledHeight = (int)(sf2*image.length);
 		int matrix[] = new int[scaledWidth*scaledHeight];
 		for (int i = 0; i < scaledHeight; i++) {
 			 for (int j = 0; j < scaledWidth; j++) {
-				 int y = (int) (Math.min( Math.round(i / sf), image.length )*image[0].length);
+				 int y = (int) (Math.min( Math.round(i / sf2), image.length )*image[0].length);
 				 int x = (int) Math.min( Math.round(j / sf), image[0].length );
-				 matrix[(int)((scaledWidth * i) + j)] = mat[(y + x)];
+				 matrix[(int)((scaledWidth * i) + j)] =mat[(y + x)];
 			 }
 		}
 		return matrix;

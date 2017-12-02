@@ -110,6 +110,12 @@ class VisualCalculator extends Frame implements ActionListener {
 		button.setVisible(true);
 		button.addActionListener(this);
 		add(button);
+		
+		button = new Button("Resize");
+		button.setVisible(true);
+		button.addActionListener(this);
+		add(button);
+
 
 
 		pack();
@@ -137,12 +143,13 @@ class VisualCalculator extends Frame implements ActionListener {
 		else if (nomeBotao.equals("Save File")) guardarResultado();
 		else if (nomeBotao.equals("Add to Database")) adicionarAoDicionario();
 		
+		else if (nomeBotao.equals("Resize")) resizeImage();
 		
 	}
 
 	// Abrir um ficheiro de Imagem
 	private void openFile() {
-		LoadImage("conta.jpg");
+		LoadImage("divide.jpg");
 
 		sizex = image.getWidth(null);
 		sizey = image.getHeight(null);
@@ -175,9 +182,43 @@ class VisualCalculator extends Frame implements ActionListener {
 		imagePanel.newImage(image);
 	}
 	
+	public void resizeImage() {
+		int sizex = image.getWidth(null);
+		int sizey = image.getHeight(null);
+		
+		
+		matrix = new int[sizex*sizey];
+		PixelGrabber pg = new PixelGrabber(image, 0, 0, sizex, sizey, matrix, 0, sizex);
+		try {
+			pg.grabPixels();
+		} catch (InterruptedException e) {
+			System.err.println("interrupted waiting for pixels!");
+			return;
+		}
+		if ((pg.getStatus() & ImageObserver.ABORT) != 0) {
+			System.err.println("image fetch aborted or errored");
+			return;
+		}
+		
+		int binaryMatrix[][] = new int[sizey][sizex];
+		for (int i=0; i<sizey;i++){
+			for(int j=0; j<sizex; j++){
+					binaryMatrix[i][j]=0;
+				}
+					
+			}
+		
+		matrix = processor.resize(binaryMatrix, matrix, 0.25, 0.45);
+		image = createImage(new MemoryImageSource((int)(0.25*sizex), (int)(0.45*sizey), matrix, 0, (int)(0.25*sizex)));
+		imagePanel.newImage(image);
+		
+	}
+	
+	
 	public void removeShadows() {
 		segFile = processor.eliminateLateraShadow(segFile);
-		image = createImage(new MemoryImageSource((int)(sizex*0.25), (int)(sizey*0.25), processor.resize(segFile.getBinaryMatrix(), segFile.getRepresentation(), 0.25), 0, (int)(sizex*0.25)));
+		image = createImage(new MemoryImageSource((int)(sizex*0.25), (int)(sizey*0.45), processor.resize(segFile.getBinaryMatrix(), segFile.getRepresentation(),0.25,0.45), 0, (int)(sizex*0.25)));
+		
 		imagePanel.newImage(image);
 	}
 	
@@ -196,6 +237,7 @@ class VisualCalculator extends Frame implements ActionListener {
 		Blob blob = blobList.get(0);
 		image = createImage(new MemoryImageSource(Math.abs(blob.getP2x()-blob.getP1x()), Math.abs(blob.getP2y()-blob.getP1y()), blob.getMatrixImage(), 0, Math.abs(blob.getP2x()-blob.getP1x()))); 
 		imagePanel.newImage(image);
+		
 		
 	}
 	
