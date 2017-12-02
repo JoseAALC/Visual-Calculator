@@ -106,10 +106,7 @@ class VisualCalculator extends Frame implements ActionListener {
 	}
 
 	// Abrir um ficheiro de Imagem
-	private void openFile()
-	{
-		// Load Image - Escolher nome da imagem a carregar!
-		// Bem mais interessante usar uma interface grafica para isto...
+	private void openFile() {
 		LoadImage("cancela.jpg");
 
 		sizex = image.getWidth(null);

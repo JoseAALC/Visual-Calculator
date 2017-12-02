@@ -194,6 +194,39 @@ public class Processor extends RGBProcessor {
 	}
 	
 	
+	public SegmentedFile eliminateLateraShadow(SegmentedFile seg) {
+		int binaryImage[][] = seg.getBinaryMatrix();
+		int matrix[] = seg.getRepresentation();
+		for(int i=0;i<binaryImage.length;i++) {
+			if(binaryImage[i][0]==1)
+				dfsMarker(binaryImage, 0, i, 1, 0);
+		}
+		
+		for(int i=0;i<binaryImage.length;i++) {
+			if(binaryImage[i][binaryImage.length-1]==1)
+				dfsMarker(binaryImage, 0, i, 1, 0);
+		}
+		
+		for(int i=0;i<binaryImage[0].length;i++) {
+			if(binaryImage[0][i]==1)
+				dfsMarker(binaryImage, i, 0, 1, 0);
+		}
+		
+		for(int i=0;i<binaryImage[0].length;i++) {
+			if(binaryImage[binaryImage[0].length-1][i]==1)
+				dfsMarker(binaryImage, i, 0, 1, 0);
+		}
+		
+		for(int j=0; j<binaryImage[0].length;j++) {
+			for(int i=0;i<binaryImage.length;i++) {
+
+				matrix[j + i*(binaryImage[0].length)] = ((binaryImage[i][j]==0) ? makeColor(255, 255, 255):makeColor(0, 0, 0));
+			}
+			
+		}
+		
+		return new SegmentedFile(binaryImage, matrix);
+	}
 	
 	
 }
