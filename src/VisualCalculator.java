@@ -135,9 +135,14 @@ class VisualCalculator extends Frame implements ActionListener {
 		imagePanel.newImage(image);
 		SegmentedFile segFile = processor.segment(image);
 		ArrayList<Blob> blobList = processor.floodFill(segFile.getBinaryMatrix());
-		System.out.println("Size: " +blobList.size());
+		System.out.println("Size in Blobs: " +blobList.size());
 		Collections.sort(blobList);
-		image = createImage(new MemoryImageSource(sizex, sizey, blobList.get(blobList.size()-1).getMatrixImage(), 0, sizex));
+		
+		
+		Blob blob = blobList.get(blobList.size()-1);
+		
+		
+		image = createImage(new MemoryImageSource(Math.abs(blob.getP2x()-blob.getP1x()), Math.abs(blob.getP2y()-blob.getP1y()), blob.getMatrixImage(), 0, Math.abs(blob.getP2x()-blob.getP1x())));
 		// Ap�s a manipula�ao da matrix, se necess�rio criar o objecto gr�fico (image) 
 		//image = createImage(new MemoryImageSource(sizex, sizey, segFile.getRepresentation(), 0, sizex));
 

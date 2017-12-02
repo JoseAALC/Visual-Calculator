@@ -57,14 +57,14 @@ public class Blob implements Comparable<Blob> {
 	
 	public int[] getMatrixImage() {
 		int matrix[] = new int[content.length*content[0].length];
-		int x =0;
 		for(int j=0; j<content[0].length;j++) {
 			for(int i=0;i<content.length;i++) {
-				matrix[x++] = (content[i][j]==1 ? makeColor(255, 255, 255):makeColor(0, 0, 0));
+
+				matrix[j + i*(p2x-p1x)] = ((content[i][j]==0) ? makeColor(255, 255, 255):makeColor(0, 0, 0));
 			}
+			
 		}
-		for(int i=0;i<matrix.length;i++)
-			System.out.println(matrix[i]);
+	
 		return matrix;
 	}
 	

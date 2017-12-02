@@ -74,7 +74,6 @@ public class Processor extends RGBProcessor {
 	 * @return a list of Blobs finded on the floodFill method
 	 */
 	public ArrayList<Blob> floodFill(int binaryImage[][]) {
-		int componentCount=0;
 		int componentMarker=2;
 		ArrayList<Blob> blobList= new ArrayList<Blob>();
 		for(int i=0; i<binaryImage.length; i++)
@@ -87,7 +86,6 @@ public class Processor extends RGBProcessor {
 					int blobMatrix[][] = copyMatrix(bounds, binaryImage);
 					Blob blob = new Blob(blobMatrix,bounds,componentMarker);
 					componentMarker++;
-					componentCount++; // why are you interested in the number of components?
 					blobList.add(blob);
 				}
 			}
