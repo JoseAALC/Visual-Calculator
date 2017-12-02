@@ -148,7 +148,7 @@ class VisualCalculator extends Frame implements ActionListener {
 	
 	public void applyFloodFill(){
 		ArrayList<Blob> blobList = processor.floodFill(segFile.getBinaryMatrix());
-		//System.out.println("Size in Blobs: " +blobList.size());
+		System.out.println(blobList.size());
 		Collections.sort(blobList);
 		blobList = processor.removeFalseBlobs(blobList);
 		System.out.println(blobList.size());
