@@ -115,7 +115,7 @@ public class Processor extends RGBProcessor {
 		}
 		
 		ArrayList<Blob> result = new ArrayList<Blob>();
-		for(int i =maxDifferenceIndex;i<listOfBlobs.size();i++)
+		for(int i =Math.max(maxDifferenceIndex,0);i<listOfBlobs.size();i++)
 			result.add(listOfBlobs.get(i));
 			
 		
@@ -203,7 +203,7 @@ public class Processor extends RGBProcessor {
 		}
 		
 		for(int i=0;i<binaryImage.length;i++) {
-			if(binaryImage[i][binaryImage.length-1]==1)
+			if(binaryImage[i][binaryImage[0].length-1]==1)
 				dfsMarker(binaryImage, 0, i, 1, 0);
 		}
 		
@@ -213,7 +213,7 @@ public class Processor extends RGBProcessor {
 		}
 		
 		for(int i=0;i<binaryImage[0].length;i++) {
-			if(binaryImage[binaryImage[0].length-1][i]==1)
+			if(binaryImage[binaryImage.length-1][i]==1)
 				dfsMarker(binaryImage, i, 0, 1, 0);
 		}
 		

@@ -64,6 +64,11 @@ class VisualCalculator extends Frame implements ActionListener {
 		button.addActionListener(this);
 		add(button);
 		
+		button = new Button("Remove Shadow");
+		button.setVisible(true);
+		button.addActionListener(this);
+		add(button);
+		
 		button = new Button("Apply FloodFill");
 		button.setVisible(true);
 		button.addActionListener(this);
@@ -74,7 +79,7 @@ class VisualCalculator extends Frame implements ActionListener {
 		button.addActionListener(this);
 		add(button);
 
-		button = new Button("Adicionar ao Dicionário");
+		button = new Button("Adicionar ao Dicionï¿½rio");
 		button.setVisible(true);
 		button.addActionListener(this);
 		add(button);
@@ -100,9 +105,11 @@ class VisualCalculator extends Frame implements ActionListener {
 		else if (nomeBotao.equals("Apply Filter")) applyFilter();
 		else if (nomeBotao.equals("Apply Segmentation")) applySegmentation();
 		else if (nomeBotao.equals("Apply FloodFill")) applyFloodFill();
+		else if (nomeBotao.equals("Remove Shadow")) removeShadows();
 		else if (nomeBotao.equals("Guardar Resultado")) guardarResultado();
-		else if (nomeBotao.equals("Adicionar ao Dicionário")) adicionarAoDicionario();
-
+		else if (nomeBotao.equals("Adicionar ao Dicionï¿½rio")) adicionarAoDicionario();
+		
+		
 	}
 
 	// Abrir um ficheiro de Imagem
@@ -137,6 +144,12 @@ class VisualCalculator extends Frame implements ActionListener {
 		int matrix[] = noise.medianFilter(10, 10, image);
 		image = createImage(new MemoryImageSource(sizex, sizey, matrix, 0, sizex));
 		// Carregar a imagem no painel externo de visualizacao
+		imagePanel.newImage(image);
+	}
+	
+	public void removeShadows() {
+		segFile = processor.eliminateLateraShadow(segFile);
+		image = createImage(new MemoryImageSource(sizex, sizey, segFile.getRepresentation(), 0, sizex));
 		imagePanel.newImage(image);
 	}
 	
