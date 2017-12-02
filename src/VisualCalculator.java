@@ -101,15 +101,16 @@ class VisualCalculator extends Frame implements ActionListener {
 		button.addActionListener(this);
 		add(button);
 		
-		button = new Button("Guardar Resultado");
+		button = new Button("Add to Database");
+		button.setVisible(true);
+		button.addActionListener(this);
+		add(button);
+		
+		button = new Button("Save File");
 		button.setVisible(true);
 		button.addActionListener(this);
 		add(button);
 
-		button = new Button("Adicionar ao Dicion�rio");
-		button.setVisible(true);
-		button.addActionListener(this);
-		add(button);
 
 		pack();
 
@@ -133,8 +134,8 @@ class VisualCalculator extends Frame implements ActionListener {
 		else if (nomeBotao.equals("Apply Segmentation")) applySegmentation();
 		else if (nomeBotao.equals("Apply FloodFill")) applyFloodFill();
 		else if (nomeBotao.equals("Remove Shadow")) removeShadows();
-		else if (nomeBotao.equals("Guardar Resultado")) guardarResultado();
-		else if (nomeBotao.equals("Adicionar ao Dicion�rio")) adicionarAoDicionario();
+		else if (nomeBotao.equals("Save File")) guardarResultado();
+		else if (nomeBotao.equals("Add to Database")) adicionarAoDicionario();
 		
 		
 	}
