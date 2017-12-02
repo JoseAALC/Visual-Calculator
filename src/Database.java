@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -5,7 +6,8 @@ import java.util.ArrayList;
  * @author ze
  *
  */
-public class Database {
+public class Database implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private ArrayList<DatabaseItem> blobs;
 	
 	public Database() {

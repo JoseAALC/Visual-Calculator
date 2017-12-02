@@ -7,8 +7,7 @@ import java.awt.event.WindowEvent;
 //---------------------------------------------------------------
 // Classe Frame de apoio para visualização de uma imagem
 //--------------------------------------------------------------- 
-class ImagePanel extends Frame
-{
+class ImagePanel extends Frame{
 	private static final long serialVersionUID = 1L;
 	private Image image; 
 

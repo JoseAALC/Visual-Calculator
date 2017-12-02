@@ -27,14 +27,41 @@ class VisualCalculator extends Frame implements ActionListener {
 	ImagePanel imagePanel; // E se eu quiser m�ltiplas janelas?
 	private Processor processor;
 	private SegmentedFile segFile;
+	private Database dataBase;
+	private boolean hasDataBase;
 	// Fun��o main cria uma instance din�mica da classe
-	public static void main(String args[])
-	{
+	public static void main(String args[]) throws IOException{
 		new VisualCalculator();
 	}
 
 	// Construtor
-	public VisualCalculator() {
+	public VisualCalculator() throws IOException{
+		
+		//open database
+		FileInputStream si;
+		ObjectInputStream ois = null;
+		try {
+		    si = new FileInputStream("database.ser");
+		    ois = new ObjectInputStream(si);
+	        dataBase = (Database) ois.readObject();    
+	        System.out.println("entrou na database");
+		} catch (Exception e) {
+		    if(e instanceof FileNotFoundException){
+		    	FileOutputStream fot = new FileOutputStream("database.ser", false);
+		    	System.out.println("criou database");
+		    	ObjectOutputStream oos = new ObjectOutputStream(fot);
+		    	oos.writeObject(dataBase);
+		    	oos.close();
+		    }
+		    else
+		    	e.printStackTrace();
+		} finally {
+		    if(ois != null){
+		        ois.close();
+		    } 
+		}
+		
+		
 		processor = new Processor();
 		// Lidar com o evento de Fechar Janela
 		addWindowListener(new WindowAdapter() {
