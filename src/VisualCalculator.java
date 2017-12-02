@@ -114,7 +114,7 @@ class VisualCalculator extends Frame implements ActionListener {
 
 	// Abrir um ficheiro de Imagem
 	private void openFile() {
-		LoadImage("cancela.jpg");
+		LoadImage("divide.jpg");
 
 		sizex = image.getWidth(null);
 		sizey = image.getHeight(null);
