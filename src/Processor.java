@@ -99,23 +99,18 @@ public class Processor extends RGBProcessor {
 	 * @return Blob list free of noise
 	 */
 	public ArrayList<Blob> removeFalseBlobs(ArrayList<Blob> listOfBlobs){
-		//My idea is that, the bigger difference between sizes of blobs corresponds to the break point
-		//between blobs and noises.
-		//this is only an idea I can be wrong, right?
+
 		Collections.sort(listOfBlobs);
-		int maxDifference = -1;
-		int maxDifferenceIndex = -1;
+		int index = -1;
 		for(int i=0;i<listOfBlobs.size()-1;i++) {
-			int difference = listOfBlobs.get(i+1).getSize() - listOfBlobs.get(i).getSize();
-			if(maxDifference < difference) {
-				maxDifference = difference;
-				maxDifferenceIndex = i+1;
+			if(listOfBlobs.get(i+1).getSize()*(1.0)/4 > listOfBlobs.get(i).getSize()) {
+				index = i+1;
 			}
 		
 		}
 		
 		ArrayList<Blob> result = new ArrayList<Blob>();
-		for(int i =Math.max(maxDifferenceIndex,0);i<listOfBlobs.size();i++)
+		for(int i =Math.max(index,0);i<listOfBlobs.size();i++)
 			result.add(listOfBlobs.get(i));
 			
 		
