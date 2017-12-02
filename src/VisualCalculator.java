@@ -115,7 +115,7 @@ class VisualCalculator extends Frame implements ActionListener {
 
 		// Janela principal 	
 		setLocation(30,100);
-		setSize(200,200);
+		setSize(300,400);
 		setVisible(true);
 	}
 
