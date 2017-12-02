@@ -98,7 +98,7 @@ class VisualCalculator extends Frame implements ActionListener {
 	{
 		// Load Image - Escolher nome da imagem a carregar!
 		// Bem mais interessante usar uma interface gr�fica para isto...
-		LoadImage("plus.jpg");
+		LoadImage("divide.jpg");
 
 		sizex = image.getWidth(null);
 		sizey = image.getHeight(null);
@@ -127,7 +127,7 @@ class VisualCalculator extends Frame implements ActionListener {
 	public void manipularImagem() {
 		
 		NoiseFilter noise = new NoiseFilter();
-		int matrix[] = noise.medianFilter(3, 3, image);
+		int matrix[] = noise.medianFilter(10, 10, image);
 		
 		image = createImage(new MemoryImageSource(sizex, sizey, matrix, 0, sizex));
 		

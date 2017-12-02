@@ -9,7 +9,11 @@ public class Processor extends RGBProcessor {
 	public Processor() {};
 	
 	
-	
+	/**
+	 * Generates an binary matrix using an image
+	 * @param original, image used to generate the binary matrix
+	 * @return an segmetedFile with a binary matrix and an imagematrix
+	 */
 	public SegmentedFile segment(Image original) {
 		//get Image Atributes
 		int sizex = original.getWidth(null);
@@ -58,11 +62,6 @@ public class Processor extends RGBProcessor {
 		
 	}
 	
-	//maybe using median filter
-	public Image cleanNoise(Image original) {
-		return original;
-		
-	}
 	//maybe using nearest-neighbor algorithm
 	public Image resize(Image original) {
 		return original;

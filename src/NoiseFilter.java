@@ -23,6 +23,7 @@ public class NoiseFilter extends RGBProcessor {
 			return null;
 		}
 		
+		
 		int result[] = new int[matrix.length];
 		System.arraycopy( matrix, 0, result, 0, matrix.length );
 		for(int i = wx + wy*sizex;i<sizey*sizex - (wx + wy*sizex);i++) {

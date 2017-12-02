@@ -110,6 +110,9 @@ public class Blob implements Comparable<Blob> {
 		this.p2y = p2y;
 	}
 
+	public Point calculateMassCenter() {
+		return new Point(p1x + (p2x-p1x)/2,p1y + (p2y-p1y)/2);
+	}
 	@Override
 	public int compareTo(Blob o) {
 		return ((Integer)(this.size)).compareTo(o.size);
