@@ -26,7 +26,7 @@ class VisualCalculator extends Frame implements ActionListener {
 	private int matrix[];
 	ImagePanel imagePanel; // E se eu quiser mï¿½ltiplas janelas?
 	private Processor processor;
-
+	private SegmentedFile segFile;
 	// Funï¿½ï¿½o main cria uma instance dinï¿½mica da classe
 	public static void main(String args[])
 	{
@@ -43,28 +43,38 @@ class VisualCalculator extends Frame implements ActionListener {
 			}
 		});
 
-		// Sinalizar que nï¿½o existe nenhum ImagePanel
+		// Sinalizar que nao existe nenhum ImagePanel
 		imagePanel = null;
 
 		// Criar botï¿½es 
 		this.setLayout(new GridLayout(4,1,1,1));
 
-		Button button = new Button("Abrir Ficheiro Imagem");
+		Button button = new Button("Open File");
 		button.setVisible(true);
 		button.addActionListener(this);
 		add(button);		
 
-		button = new Button("Realizar Operaï¿½ï¿½o");
+		button = new Button("Apply Filter");
 		button.setVisible(true);
 		button.addActionListener(this);
-		add(button);		
-
+		add(button);
+		
+		button = new Button("Apply Segmentation");
+		button.setVisible(true);
+		button.addActionListener(this);
+		add(button);
+		
+		button = new Button("Apply FloodFill");
+		button.setVisible(true);
+		button.addActionListener(this);
+		add(button);
+		
 		button = new Button("Guardar Resultado");
 		button.setVisible(true);
 		button.addActionListener(this);
 		add(button);
 
-		button = new Button("Adicionar ao Dicionï¿½rio");
+		button = new Button("Adicionar ao Dicionário");
 		button.setVisible(true);
 		button.addActionListener(this);
 		add(button);
@@ -86,19 +96,21 @@ class VisualCalculator extends Frame implements ActionListener {
 		String nomeBotao = pressedButton.getActionCommand();
 
 		// Realizar acï¿½ï¿½o adequada
-		if (nomeBotao.equals("Abrir Ficheiro Imagem")) abrirFicheiro();
-		else if (nomeBotao.equals("Realizar Operaï¿½ï¿½o")) manipularImagem();
+		if (nomeBotao.equals("Open File")) openFile();
+		else if (nomeBotao.equals("Apply Filter")) applyFilter();
+		else if (nomeBotao.equals("Apply Segmentation")) applySegmentation();
+		else if (nomeBotao.equals("Apply FloodFill")) applyFloodFill();
 		else if (nomeBotao.equals("Guardar Resultado")) guardarResultado();
-		else if (nomeBotao.equals("Adicionar ao Dicionï¿½rio")) adicionarAoDicionario();
+		else if (nomeBotao.equals("Adicionar ao Dicionário")) adicionarAoDicionario();
 
 	}
 
 	// Abrir um ficheiro de Imagem
-	private void abrirFicheiro()
+	private void openFile()
 	{
 		// Load Image - Escolher nome da imagem a carregar!
-		// Bem mais interessante usar uma interface grï¿½fica para isto...
-		LoadImage("divide.jpg");
+		// Bem mais interessante usar uma interface grafica para isto...
+		LoadImage("cancela.jpg");
 
 		sizex = image.getWidth(null);
 		sizey = image.getHeight(null);
@@ -123,31 +135,34 @@ class VisualCalculator extends Frame implements ActionListener {
 		imagePanel.setVisible(true);
 	}
 
-	// Exemplo de uma funï¿½ï¿½o que manipula a imagem
-	public void manipularImagem() {
-		
+	public void applyFilter(){
 		NoiseFilter noise = new NoiseFilter();
 		int matrix[] = noise.medianFilter(10, 10, image);
-		
 		image = createImage(new MemoryImageSource(sizex, sizey, matrix, 0, sizex));
-		
-		// Carregar a imagem no painel externo de visualizaï¿½ï¿½o
+		// Carregar a imagem no painel externo de visualizacao
 		imagePanel.newImage(image);
-		SegmentedFile segFile = processor.segment(image);
+	}
+	
+	public void applySegmentation(){
+		segFile = processor.segment(image);
+		image = createImage(new MemoryImageSource(sizex, sizey, segFile.getRepresentation(), 0, sizex));
+		imagePanel.newImage(image);
+	}
+	
+	public void applyFloodFill(){
 		ArrayList<Blob> blobList = processor.floodFill(segFile.getBinaryMatrix());
-		System.out.println("Size in Blobs: " +blobList.size());
+		//System.out.println("Size in Blobs: " +blobList.size());
 		Collections.sort(blobList);
-		
-		
-		Blob blob = blobList.get(blobList.size()-1);
-		
-		
-		image = createImage(new MemoryImageSource(Math.abs(blob.getP2x()-blob.getP1x()), Math.abs(blob.getP2y()-blob.getP1y()), blob.getMatrixImage(), 0, Math.abs(blob.getP2x()-blob.getP1x())));
-		// Apï¿½s a manipulaï¿½ao da matrix, se necessï¿½rio criar o objecto grï¿½fico (image) 
-		//image = createImage(new MemoryImageSource(sizex, sizey, segFile.getRepresentation(), 0, sizex));
-
-		// Carregar a imagem no painel externo de visualizaï¿½ï¿½o
+		blobList = processor.removeFalseBlobs(blobList);
+		System.out.println(blobList.size());
+		Blob blob = blobList.get(0);
+		image = createImage(new MemoryImageSource(Math.abs(blob.getP2x()-blob.getP1x()), Math.abs(blob.getP2y()-blob.getP1y()), blob.getMatrixImage(), 0, Math.abs(blob.getP2x()-blob.getP1x()))); 
 		imagePanel.newImage(image);
+		
+	}
+	
+	public void manipularImagem() {
+		
 	}
 
 	// Funï¿½ï¿½o de apoio que grava a imagem visualizada

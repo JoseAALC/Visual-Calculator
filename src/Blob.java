@@ -5,7 +5,7 @@
  *
  */
 public class Blob implements Comparable<Blob> {
-	
+
 	/**
 	 * object matrix content filled with 1's and 0's
 	 */
@@ -22,7 +22,7 @@ public class Blob implements Comparable<Blob> {
 	 * Number of pixels
 	 */
 	private int size;
-	
+
 
 	public int getID() {
 		return ID;
@@ -49,26 +49,24 @@ public class Blob implements Comparable<Blob> {
 		ID = iD;
 		this.size = size;
 	}
-	
+
 	public Blob(int[][] content,Bounds bounds,int ID) {
 		this(content,bounds.getLeftBond(),bounds.getUpperBond(),bounds.getRightBond(),bounds.getLowerBond(),bounds.getSize(),ID);
-		
+
 	}
-	
+
 	public int[] getMatrixImage() {
 		int matrix[] = new int[content.length*content[0].length];
 		for(int j=0; j<content[0].length;j++) {
 			for(int i=0;i<content.length;i++) {
-
 				matrix[j + i*(p2x-p1x)] = ((content[i][j]==0) ? makeColor(255, 255, 255):makeColor(0, 0, 0));
 			}
-			
 		}
-	
+
 		return matrix;
 	}
-	
-	
+
+
 
 	public int[][] getContent() {
 		return content;
@@ -115,8 +113,15 @@ public class Blob implements Comparable<Blob> {
 	}
 	@Override
 	public int compareTo(Blob o) {
+		/*if(this.p1x < o.p1x)
+			return -1;
+		else if(this.p1x > o.p1x)
+			return 1;
+		else
+			return 0;
+		 */
 		return ((Integer)(this.size)).compareTo(o.size);
 	}
-	
+
 	protected int makeColor(int red, int green, int blue) { return (255 << 24) | (red << 16) | (green << 8) | blue; }
 }
