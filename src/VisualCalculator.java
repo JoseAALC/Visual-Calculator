@@ -177,7 +177,7 @@ class VisualCalculator extends Frame implements ActionListener {
 	
 	public void removeShadows() {
 		segFile = processor.eliminateLateraShadow(segFile);
-		image = createImage(new MemoryImageSource(sizex, sizey, segFile.getRepresentation(), 0, sizex));
+		image = createImage(new MemoryImageSource((int)(sizex*0.25), (int)(sizey*0.25), processor.resize(segFile.getBinaryMatrix(), segFile.getRepresentation(), 0.25), 0, (int)(sizex*0.25)));
 		imagePanel.newImage(image);
 	}
 	
