@@ -22,6 +22,10 @@ public class Database implements Serializable{
 		return blobs.size();
 	}
 	
+	/**
+	 * removes the first blob that appears in the database with that character. 
+	 * @param c
+	 */
 	public void removeBlob(char c) throws IOException{
 		for(int i=0; i<blobs.size(); i++){
 			if(blobs.get(i).getSymbol().equals(c)){
@@ -87,7 +91,6 @@ public class Database implements Serializable{
 		}
 		return blobs.get(maxindex).getBlob();
 	}
-	
 	
 	
 }

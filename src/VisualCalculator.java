@@ -22,14 +22,17 @@ class VisualCalculator extends Frame implements ActionListener {
 	// Isto deve estar na classe ImageFrame!
 	private Image image;
 	private int sizex;
-	private int sizey;;
+	private int sizey;
 	private int matrix[];
 	ImagePanel imagePanel; // E se eu quiser m�ltiplas janelas?
 	private Processor processor;
 	private SegmentedFile segFile;
 	private Database dataBase;
-	private boolean hasDataBase;
-	// Fun��o main cria uma instance din�mica da classe
+	private ArrayList<Blob> blobList;
+	private String filename = "cancela.jpg";
+	private char symbol = '?';
+	private String filenameToSave = "res.jpg";
+	
 	public static void main(String args[]) throws IOException{
 		new VisualCalculator();
 	}
@@ -44,8 +47,9 @@ class VisualCalculator extends Frame implements ActionListener {
 		    si = new FileInputStream("database.ser");
 		    ois = new ObjectInputStream(si);
 	        dataBase = (Database) ois.readObject();
-	        //dataBase.removeBlob('-');
-	        System.out.println("entrou na database "+dataBase.getSize());
+	        //dataBase.removeBlob('1');
+	        //dataBase.changeBitsToOne();
+	        System.out.println("entrou na database, tem "+dataBase.getSize() + " DatabaseItems");
 	        
 		} catch (Exception e) {
 		    if(e instanceof FileNotFoundException){
@@ -104,6 +108,11 @@ class VisualCalculator extends Frame implements ActionListener {
 		button.addActionListener(this);
 		add(button);
 		
+		button = new Button("Calculate");
+		button.setVisible(true);
+		button.addActionListener(this);
+		add(button);
+		
 		button = new Button("Add to Database");
 		button.setVisible(true);
 		button.addActionListener(this);
@@ -148,16 +157,16 @@ class VisualCalculator extends Frame implements ActionListener {
 			try {
 				saveToDatabase();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		else if (nomeBotao.equals("Resize")) resizeImage();
+		else if (nomeBotao.equals("Calculate")) calculate();
 		
 	}
 
 	// Abrir um ficheiro de Imagem
 	private void openFile() {
-		LoadImage("plus.jpg");
+		LoadImage(filename);
 
 		sizex = image.getWidth(null);
 		sizey = image.getHeight(null);
@@ -249,32 +258,38 @@ class VisualCalculator extends Frame implements ActionListener {
 	}
 	
 	public void applyFloodFill(){
-		ArrayList<Blob> blobList = processor.floodFill(segFile.getBinaryMatrix());
+		blobList = processor.floodFill(segFile.getBinaryMatrix());
 		System.out.println(blobList.size());
 		Collections.sort(blobList);
 		blobList = processor.removeFalseBlobs(blobList);
 		System.out.println(blobList.size());
+		
+		/* Para testar floodfill
 		Blob blob = blobList.get(0);
 		image = createImage(new MemoryImageSource(Math.abs(blob.getP2x()-blob.getP1x()), Math.abs(blob.getP2y()-blob.getP1y()), blob.getMatrixImage(), 0, Math.abs(blob.getP2x()-blob.getP1x()))); 
 		imagePanel.newImage(image);
+		*/
 		
+	}
+	
+	public void calculate(){
+		//sort blobs by position
+		blobList = Blob.sortByPosition(blobList);
+		//resizeBlobs
+		//correlation
+		//calculate expression result
+		//display result in image
 		
 	}
 	
 	
-	// Fun��o de apoio que grava a imagem visualizada
-	private void saveFile()
-	{
-		// Criar uma BufferedImage a partir de uma Image
+	private void saveFile() {
 		BufferedImage bi = new BufferedImage(image.getWidth(null),image.getHeight(null),BufferedImage.TYPE_INT_RGB);
 		Graphics bg = bi.getGraphics();
 		bg.drawImage(image, 0, 0, null);
 		bg.dispose();
-
-		// Escrever ficheiro de sa�da
-		// Pq n�o implementar uma interface de escolha do nome?
 		try {
-			ImageIO.write(bi, "jpg", new File("resultadoPraja.jpg"));
+			ImageIO.write(bi, "jpg", new File(filenameToSave));
 		} catch (IOException e) {
 			System.err.println("Couldn't write output file!");
 			return;
@@ -282,29 +297,10 @@ class VisualCalculator extends Frame implements ActionListener {
 	}
 
 	public void saveToDatabase() throws IOException{
-		int sizex = image.getWidth(null);
-		int sizey = image.getHeight(null);
-		
-		int matrix[] = new int[sizex*sizey];
-		int binaryMatrix[][] = new int[sizey][sizex];
-		PixelGrabber pg = new PixelGrabber(image, 0, 0, sizex, sizey, matrix, 0, sizex);
-		try {
-			pg.grabPixels();
-		} catch (InterruptedException e) {
-			System.err.println("interrupted waiting for pixels!");
-		}
-		
-		int x=0;
-		for (int i=0; i<sizey;i++){
-			for(int j=0; j<sizex; j++){
-				binaryMatrix[i][j]=matrix[x];
-				x++;
-			}
-		}
-		
-		Blob t = new Blob(binaryMatrix, 0, 0, sizex, sizey, sizex*sizey, 0);
-		dataBase.addBlob(t,'=');
-				
+		SegmentedFile seg = processor.segment(image);
+		Blob t = new Blob(seg.getBinaryMatrix(), 0, 0, sizex, sizey, sizex*sizey, 0);
+		dataBase.addBlob(t,symbol);
+		System.out.println("adicionado com sucesso, tem "+dataBase.getSize() + " DatabaseItems");	
 	}
 
 	// Fun��o de apoio que carrega uma imagem externa

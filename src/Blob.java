@@ -1,4 +1,7 @@
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Binary matrix object representative of an finded symbol
@@ -113,6 +116,41 @@ public class Blob implements Comparable<Blob>, Serializable {
 	public Point calculateMassCenter() {
 		return new Point(p1x + (p2x-p1x)/2,p1y + (p2y-p1y)/2);
 	}
+	
+	public void printBlob(){
+		for(int i=0; i<content.length; i++){
+			for(int j=0; j< content[0].length; j++)
+				System.out.print(content[i][j]);
+			System.out.println();
+		}
+	}
+	
+	public static ArrayList<Blob> sortByPosition(ArrayList<Blob> blobList){
+		Collections.sort(blobList, new Comparator<Blob>() {
+            @Override
+            public int compare(Blob b1, Blob b2) {
+            	if(b1.p1x < b2.p1x)
+        			return -1;
+        		else if(b1.p1x > b2.p1x)
+        			return 1;
+        		else
+        			return 0;
+            }
+        });
+		blobList.get(0).printBlob();
+		return blobList;
+	}
+	
+	/*
+	public static int compareByPosition(Blob b1, Blob b2){
+		if(b1.p1x < b2.p1x)
+			return -1;
+		else if(b1.p1x > b2.p1x)
+			return 1;
+		else
+			return 0;
+	}*/
+	
 	@Override
 	public int compareTo(Blob o) {
 		/*if(this.p1x < o.p1x)

@@ -6,7 +6,6 @@ public class DatabaseItem implements Serializable {
 	private Character symbol;
 	
 	public DatabaseItem(Blob blob, Character symbol) {
-		super();
 		this.blob = blob;
 		this.symbol = symbol;
 	}
@@ -22,4 +21,5 @@ public class DatabaseItem implements Serializable {
 	public void setSymbol(Character symbol) {
 		this.symbol = symbol;
 	}
+	
 }
