@@ -39,6 +39,15 @@ public class Database implements Serializable{
 		}
 	}
 	
+	public Blob getBlob(char s){
+		for(DatabaseItem di : blobs){
+			if(di.getSymbol() == s)
+				return di.getBlob();
+		}
+		return null; 
+	}
+	
+	
 	/**
 	 *  adds an blob to database
 	 * @param blob to be added to database
@@ -85,7 +94,9 @@ public class Database implements Serializable{
 				max = corr;
 				maxindex = i;
 			}
+			//System.out.println(corr);
 		}
+		//System.out.println();
 		return blobs.get(maxindex).getSymbol();
 	}
 	

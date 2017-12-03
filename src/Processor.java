@@ -15,26 +15,18 @@ public class Processor extends RGBProcessor {
 	 * @return an segmetedFile with a binary matrix and an imagematrix
 	 */
 	public SegmentedFile segment(Image original) {
-		//get Image Atributes
 		int sizex = original.getWidth(null);
 		int sizey = original.getHeight(null);
-		
 		int matrix[] = new int[sizex*sizey];
 		int binaryMatrix[][] = new int[sizey][sizex];
 		PixelGrabber pg = new PixelGrabber(original, 0, 0, sizex, sizey, matrix, 0, sizex);
-		
-		
 		try {
 			pg.grabPixels();
 		} catch (InterruptedException e) {
 			System.err.println("interrupted waiting for pixels!");
 			return null;
 		}
-		
-		
-		//vamos comecar
 		int verde, vermelho, azul;
-		
 		int x=0;
 		// Ciclo que percorre a imagem inteira
 		for (int i=0; i<sizey;i++){
@@ -42,7 +34,6 @@ public class Processor extends RGBProcessor {
 				vermelho = getRed(matrix[x]);
 				verde = getGreen(matrix[x]);
 				azul = getBlue(matrix[x]);
-				
 				if(vermelho>=50 && verde>=100  && azul>=100){
 					matrix[x] = makeColor(255,255,255);
 					binaryMatrix[i][j]=0;
@@ -61,13 +52,11 @@ public class Processor extends RGBProcessor {
 	public int[] resize(int image[][],int mat[],double sf,double sf2) {
 		int scaledWidth = (int)(sf*image[0].length);
 		int scaledHeight = (int)(sf2*image.length);
-		//System.out.println(scaledWidth + " " + scaledHeight);
 		int matrix[] = new int[scaledWidth*scaledHeight];
 		for (int i = 0; i < scaledHeight; i++) {
 			 for (int j = 0; j < scaledWidth; j++) {
 				 int y = (int) (Math.min( Math.round(i / sf2), image.length-1 )*image[0].length);
 				 int x = (int) Math.min( Math.round(j / sf), image[0].length -1);
-				 //System.out.println(y +" "+x);
 				 matrix[(int)((scaledWidth * i) + j)] =mat[(y + x)];
 			 }
 		}
@@ -152,46 +141,29 @@ public class Processor extends RGBProcessor {
 	 * @param marker that will mark the numbers that must change
 	 */ 
 	private Bounds dfsMarker(int binaryImage[][],int x, int y,int conditionMarker,int marker) {
-		//exceed matrix check
-		
 		LinkedList<Point> points = new LinkedList<Point>();
-		
 		points.addFirst(new Point(x,y));
 		int size=0,lb= -1 ,leb = binaryImage[0].length,ub = binaryImage.length,rb= -1;
 		while(!points.isEmpty()) {
 			Point p = points.removeFirst();
 			x = p.getX();
 			y = p.getY();
-		
-		
-		
-		
 			if(x >= binaryImage[0].length || x <0 || y >= binaryImage.length || y<0){
 				continue;
 			}
-			//If the bit must me marked
 			if(binaryImage[y][x]==conditionMarker) {
 				binaryImage[y][x] = marker;
-			
-		
-				//four directions cheking 1's
 				points.addFirst(new Point(x-1,y));
 				points.addFirst(new Point(x+1,y));
 				points.addFirst(new Point(x,y+1));
 				points.addFirst(new Point(x,y-1));
-
 				size +=1;
 				lb = Math.max(lb,y);
 				ub = Math.min(ub,y);
 				leb = Math.min(leb,x);
 				rb = Math.max(rb,x);
-		
-			
-				
-					
 			}
 		}
-		
 			return new Bounds(lb, ub, leb, rb,size);
 	}
 	

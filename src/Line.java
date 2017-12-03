@@ -13,12 +13,12 @@ public class Line {
 		
 		while(true) {
 			double actualRss = RSS(points,b,m);
-			
 			if( Math.abs(beforeRss-actualRss) < delta)
 				break;
 			b = step*derivative1(points, b, m);
 			m = step*derivative2(points, b, m);
 		}
+		System.out.println("Convergi! m= "+m);
 		this.b = b;
 		this.m = m;
 	}

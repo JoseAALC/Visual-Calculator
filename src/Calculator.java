@@ -17,7 +17,7 @@ public class Calculator {
 			if(s.charAt(i) !=  ' ')
 				symbols.add(s.charAt(i));
 		}
-		System.out.println(numbers.get(0) + " " + numbers.get(1));
+		//System.out.println(numbers.get(0) + " " + numbers.get(1));
 		int result = numbers.get(0);
 		for(int i=1;i<numbers.size();i++) {
 			if(symbols.get(i-1).equals('+'))

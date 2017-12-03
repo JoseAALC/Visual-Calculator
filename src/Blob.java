@@ -64,7 +64,10 @@ public class Blob implements Comparable<Blob>, Serializable {
 		int matrix[] = new int[content.length*content[0].length];
 		for(int j=0; j<content[0].length;j++) {
 			for(int i=0;i<content.length;i++) {
-				matrix[j + i*(p2x-p1x)] = ((content[i][j]==0) ? makeColor(255, 255, 255):makeColor(0, 0, 0));
+				System.out.println("\n"+content[0].length * content.length);
+				int kk= (j + i*(p2x-p1x));
+				System.out.println(kk);;
+				matrix[kk] =((content[i][j]==0) ? makeColor(255, 255, 255):makeColor(0, 0, 0));
 			}
 		}
 
@@ -137,29 +140,12 @@ public class Blob implements Comparable<Blob>, Serializable {
         			return 0;
             }
         });
-		//blobList.get(0).printBlob();
 		return blobList;
 	}
 	
-	/*
-	public static int compareByPosition(Blob b1, Blob b2){
-		if(b1.p1x < b2.p1x)
-			return -1;
-		else if(b1.p1x > b2.p1x)
-			return 1;
-		else
-			return 0;
-	}*/
 	
 	@Override
 	public int compareTo(Blob o) {
-		/*if(this.p1x < o.p1x)
-			return -1;
-		else if(this.p1x > o.p1x)
-			return 1;
-		else
-			return 0;
-		 */
 		return ((Integer)(this.size)).compareTo(o.size);
 	}
 
