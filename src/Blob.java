@@ -137,7 +137,7 @@ public class Blob implements Comparable<Blob>, Serializable {
         			return 0;
             }
         });
-		blobList.get(0).printBlob();
+		//blobList.get(0).printBlob();
 		return blobList;
 	}
 	

@@ -54,18 +54,14 @@ public class Processor extends RGBProcessor {
 				x++;	
 			}
 		}
-		
-		
-		
-		return new SegmentedFile(binaryMatrix,matrix);
-	
-		
+		return new SegmentedFile(binaryMatrix,matrix);	
 	}
 	
-	//maybe using nearest-neighbor algorithm
+	
 	public int[] resize(int image[][],int mat[],double sf,double sf2) {
 		int scaledWidth = (int)(sf*image[0].length);
 		int scaledHeight = (int)(sf2*image.length);
+		//System.out.println(scaledWidth + " " + scaledHeight);
 		int matrix[] = new int[scaledWidth*scaledHeight];
 		for (int i = 0; i < scaledHeight; i++) {
 			 for (int j = 0; j < scaledWidth; j++) {

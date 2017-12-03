@@ -29,8 +29,9 @@ class VisualCalculator extends Frame implements ActionListener {
 	private SegmentedFile segFile;
 	private Database dataBase;
 	private ArrayList<Blob> blobList;
-	private String filename = "cancela.jpg";
+	private String filename = "exp3.jpg";
 	private char symbol = '?';
+	private String expressionToCalculate;
 	private String filenameToSave = "res.jpg";
 	
 	public static void main(String args[]) throws IOException{
@@ -47,10 +48,8 @@ class VisualCalculator extends Frame implements ActionListener {
 		    si = new FileInputStream("database.ser");
 		    ois = new ObjectInputStream(si);
 	        dataBase = (Database) ois.readObject();
-	        //dataBase.removeBlob('1');
-	        //dataBase.changeBitsToOne();
 	        System.out.println("entrou na database, tem "+dataBase.getSize() + " DatabaseItems");
-	        
+	        dataBase.checkSize();
 		} catch (Exception e) {
 		    if(e instanceof FileNotFoundException){
 		    	FileOutputStream fot = new FileOutputStream("database.ser", false);
@@ -206,6 +205,25 @@ class VisualCalculator extends Frame implements ActionListener {
 		imagePanel.newImage(image);
 	}
 	
+	public void expandImage(){
+		sizex = image.getWidth(null);
+		sizey = image.getHeight(null);
+		matrix = new int[sizex*sizey];
+		PixelGrabber pg = new PixelGrabber(image, 0, 0, sizex, sizey, matrix, 0, sizex);
+		try {
+			pg.grabPixels();
+		} catch (InterruptedException e) {
+			System.err.println("interrupted waiting for pixels!");
+			return;
+		}
+		if ((pg.getStatus() & ImageObserver.ABORT) != 0) {
+			System.err.println("image fetch aborted or errored");
+			return;
+		}
+		
+		
+	}
+	
 	public void resizeImage() {
 		int sizex = image.getWidth(null);
 		int sizey = image.getHeight(null);
@@ -264,20 +282,49 @@ class VisualCalculator extends Frame implements ActionListener {
 		blobList = processor.removeFalseBlobs(blobList);
 		System.out.println(blobList.size());
 		
-		/* Para testar floodfill
-		Blob blob = blobList.get(0);
-		image = createImage(new MemoryImageSource(Math.abs(blob.getP2x()-blob.getP1x()), Math.abs(blob.getP2y()-blob.getP1y()), blob.getMatrixImage(), 0, Math.abs(blob.getP2x()-blob.getP1x()))); 
-		imagePanel.newImage(image);
-		*/
-		
 	}
 	
 	public void calculate(){
 		//sort blobs by position
 		blobList = Blob.sortByPosition(blobList);
 		//resizeBlobs
+		for(Blob b : blobList){
+			float sx= 300.f/(b.getP2x()-b.getP1x());
+			float sy = 500.f/(b.getP2y()-b.getP1y());			
+			int colorMatrix[] = processor.resize(b.getContent(), b.getMatrixImage(), sx, sy);
+			int binaryMatrix [][] = new int[(int)((b.getP2y()-b.getP1y())*sy)][(int)((b.getP2x()-b.getP1x())*sx)];
+			int x=0;
+			for (int i=0; i<binaryMatrix.length; i++){
+				for(int j=0; j< binaryMatrix[0].length; j++){
+					int vermelho = getRed(colorMatrix[x]);
+					int verde = getGreen(colorMatrix[x]);
+					int azul = getBlue(colorMatrix[x]);
+					
+					if(vermelho==255 && verde==255  && azul==255){
+						binaryMatrix[i][j]=0;
+					}
+					else{
+						binaryMatrix[i][j]=1;
+					}
+					x++;	
+				}
+			}
+			b.setContent(binaryMatrix);
+		}
+		
 		//correlation
+		expressionToCalculate = new String("");
+		for(Blob b : blobList){
+			char c = dataBase.correlation(b);
+			expressionToCalculate+=c;
+		}
+		if(expressionToCalculate.substring(expressionToCalculate.length()-2).equals("--"))
+			expressionToCalculate = expressionToCalculate.substring(0,expressionToCalculate.length()-2);
+		System.out.println(expressionToCalculate);
+		
 		//calculate expression result
+		String result = Calculator.calculate(expressionToCalculate+" ");
+		System.out.println(result);
 		//display result in image
 		
 	}
@@ -312,4 +359,9 @@ class VisualCalculator extends Frame implements ActionListener {
 		try { mediaTracker.waitForID(0); }
 		catch (InterruptedException ie) {};		
 	}
+	
+	private int getRed(int color) { return (color >> 16) & 0xff; }
+	private int getGreen(int color) { return (color >> 8) & 0xff; }
+	private int getBlue(int color) { return color & 0xff; }
+	private int makeColor(int red, int green, int blue) { return (255 << 24) | (red << 16) | (green << 8) | blue; }
 }

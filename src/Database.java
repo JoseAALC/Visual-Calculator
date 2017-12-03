@@ -62,13 +62,10 @@ public class Database implements Serializable{
 		int blob2matrix[][] = blob2.getContent();
 		
 		int corr =0;
-		for(int i=0;i<blob1matrix.length;i++)
-			for(int j =0;j<blob1matrix[i].length;j++)
+		for(int i=0;i<Math.min(blob1matrix.length, blob2matrix.length);i++)
+			for(int j =0;j<Math.min(blob1matrix[i].length, blob2matrix[i].length);j++)
 				corr+= correlationBits(blob1matrix[i][j],blob2matrix[i][j]);
-				
-		
 		return corr;
-		
 	}
 	//computes (p and q) or (not p and not q)
 	private int correlationBits(int p,int q) {
@@ -79,7 +76,7 @@ public class Database implements Serializable{
 	 * @param test
 	 * @return
 	 */
-	public Blob correlation(Blob test) {
+	public char correlation(Blob test) {
 		int max =-1;
 		int maxindex = -1;
 		for(int i=0;i<blobs.size();i++) {
@@ -89,7 +86,13 @@ public class Database implements Serializable{
 				maxindex = i;
 			}
 		}
-		return blobs.get(maxindex).getBlob();
+		return blobs.get(maxindex).getSymbol();
+	}
+	
+	public void checkSize(){
+		for(DatabaseItem di : blobs){
+			System.out.println(di.getBlob().getContent().length +" " + di.getBlob().getContent()[0].length);
+		}
 	}
 	
 	
