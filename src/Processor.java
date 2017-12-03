@@ -142,7 +142,7 @@ public class Processor extends RGBProcessor {
 		for(int i =bounds.getUpperBond(); i<=bounds.getLowerBond();i++) 
 			for(int j=bounds.getLeftBond();j<=bounds.getRightBond();j++) {
 
-				blobMatrix[i-bounds.getUpperBond()][j-bounds.getLeftBond()] = matrix[i][j];
+				blobMatrix[i-bounds.getUpperBond()][j-bounds.getLeftBond()] = ((matrix[i][j]!=0) ? 1:0);
 			}
 		return blobMatrix;
 	}

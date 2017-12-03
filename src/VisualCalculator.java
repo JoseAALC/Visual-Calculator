@@ -157,7 +157,7 @@ class VisualCalculator extends Frame implements ActionListener {
 
 	// Abrir um ficheiro de Imagem
 	private void openFile() {
-		LoadImage("equals.jpg");
+		LoadImage("plus.jpg");
 
 		sizex = image.getWidth(null);
 		sizey = image.getHeight(null);
@@ -183,8 +183,15 @@ class VisualCalculator extends Frame implements ActionListener {
 	}
 
 	public void applyFilter(){
+		
 		NoiseFilter noise = new NoiseFilter();
-		int matrix[] = noise.medianFilter(9,9, image);
+		
+		long startTime = System.currentTimeMillis();
+		
+		int matrix[] = noise.medianFilter(3,3, image);
+		long stopTime = System.currentTimeMillis();	
+		long elapsedTime = stopTime - startTime;
+		System.out.println("segundos: " + elapsedTime*0.001 );
 		image = createImage(new MemoryImageSource(sizex, sizey, matrix, 0, sizex));
 		// Carregar a imagem no painel externo de visualizacao
 		imagePanel.newImage(image);
